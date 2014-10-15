@@ -12,6 +12,7 @@ Supports grant types:
 * Implicit (just set token received from user-agent)
 
 Supports Bearer ([RFC-6750](http://tools.ietf.org/html/rfc6750)) token type.
+Supports refresh token and auto-obtaining of new access token.
 
 ##Contribution
 If you have found a bug, please create pull request with [mocha](https://www.npmjs.org/package/mocha) 

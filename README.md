@@ -8,8 +8,7 @@ Supports grant types:
 
 * Client Credentials
 * Resource Owner Password Credentials
-* Authorization Code Grant
-* Implicit (just set token received from user-agent)
+* Authorization Code Grant (redirect endpoint implementation)
 
 Supports Bearer ([RFC-6750](http://tools.ietf.org/html/rfc6750)) token type.
 Supports refresh token and auto-obtaining of new access token.

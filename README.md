@@ -2,7 +2,8 @@
 [![NPM](https://nodei.co/npm/catberry-oauth2-client.png)](https://nodei.co/npm/catberry-oauth2-client/)
 
 ##Description
-This plugin implements "client" role from OAuth 2.0 ([RFC-6749](http://www.rfc-base.org/txt/rfc-6749.txt)). 
+This plugin implements "client" and "resource server" roles from 
+OAuth 2.0 ([RFC-6749](http://www.rfc-base.org/txt/rfc-6749.txt)). 
 
 Supports grant types:
 

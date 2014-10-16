@@ -30,9 +30,8 @@
 
 'use strict';
 
-var LocalizationProvider = require('./lib/LocalizationProvider'),
-	LocalizationHelper = require('./lib/LocalizationHelper'),
-	LocalizationLoader = require('./lib/LocalizationLoader');
+var OAuth2FlowFactory = require('./lib/OAuth2FlowFactory'),
+	ResourceServer = require('./lib/ResourceServer');
 
 module.exports = {
 	/**
@@ -41,19 +40,9 @@ module.exports = {
 	 */
 	register: function (locator) {
 		var config = locator.resolve('config');
-		locator.register('localizationProvider',
-			LocalizationProvider, config, true);
-		locator.register('localizationLoader',
-			LocalizationLoader, config, true);
-
-		try {
-			var dust = locator.resolve('dust'),
-				helper = locator.resolveInstance(LocalizationHelper, config);
-			dust.helperManager.add('l10n', helper.getDustHelper());
-		} catch (e) {
-			//nothing to do.
-		}
+		locator.register('oauth2FlowFactory', OAuth2FlowFactory, config, true);
+		locator.register('ResourceServer', ResourceServer, config);
 	},
-	LocalizationProvider: LocalizationProvider,
-	LocalizationLoader: LocalizationLoader
+	OAuth2FlowFactory: OAuth2FlowFactory,
+	ResourceServer: ResourceServer
 };

@@ -41,7 +41,7 @@ module.exports = {
 	register: function (locator) {
 		var config = locator.resolve('config');
 		locator.register('oauth2FlowFactory', OAuth2FlowFactory, config, true);
-		locator.register('ResourceServer', ResourceServer, config);
+		locator.register('resourceServer', ResourceServer, config);
 	},
 	OAuth2FlowFactory: OAuth2FlowFactory,
 	ResourceServer: ResourceServer

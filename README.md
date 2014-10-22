@@ -86,7 +86,7 @@ cat.startWhenReady();
 
 ###Configuration
 For server configuration:
-```json
+```javascript
 {
 	"authorization": {
 		
@@ -183,7 +183,7 @@ For server configuration:
 ```
 
 For browser configuration:
-```json
+```javascript
 {
 	"authorization": {
 		"resourceServers": {

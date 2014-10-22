@@ -2,17 +2,24 @@
 [![NPM](https://nodei.co/npm/catberry-oauth2-client.png)](https://nodei.co/npm/catberry-oauth2-client/)
 
 ##Description
-This plugin implements "client" and "resource server" roles from 
-OAuth 2.0 ([RFC-6749](http://www.rfc-base.org/txt/rfc-6749.txt)). 
+This plugin implements "client" and "resource server" 
+[roles](http://tools.ietf.org/html/rfc6749#section-1.1) from OAuth 2.0 
+([RFC-6749](http://www.rfc-base.org/txt/rfc-6749.txt)). 
 
 Supports grant types:
 
-* Client Credentials
-* Resource Owner Password Credentials
-* Authorization Code Grant (redirect endpoint implementation)
+* Client Credentials (authorization middleware + endpoint)
+* Resource Owner Password Credentials (endpoint)
+* Authorization Code Grant (endpoint for callback)
+* Refresh token (endpoint)
 
 Supports Bearer ([RFC-6750](http://tools.ietf.org/html/rfc6750)) token type.
-Supports refresh token and auto-obtaining of new access token.
+
+This plugin sets access and refresh token to specified cookies and uses them
+to do all requests to resource server.
+
+If resource server returns 401 status code it tries to refresh token or
+unset all token cookies if refreshing is failed.
 
 ##Contribution
 If you have found a bug, please create pull request with [mocha](https://www.npmjs.org/package/mocha) 

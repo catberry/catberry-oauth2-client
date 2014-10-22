@@ -29,7 +29,7 @@ Plugin consists of two parts:
  application.
  * `ResourceServer` type registered in [Service Locator](https://github.com/catberry/catberry/blob/master/docs/index.md#service-locator)
 
-###At server
+###At Server
 
 In `server.js` you must register library in locator and use factory like this:
 
@@ -71,7 +71,7 @@ http
 	.listen(config.port);
 ```
 
-###In browser
+###In Browser
 In `browser.js` just do the following:
 
 ```javascript
@@ -182,7 +182,7 @@ For server configuration:
 }
 ```
 
-For browser configuration:
+For both server and browser configuration:
 ```javascript
 {
 	"authorization": {
@@ -218,7 +218,10 @@ For browser configuration:
 }
 ```
 
-###Resource server usage
+**WARNING! DO NOT STORE `clientId` AND `clientSecret` PARAMETERS IN 
+BROWSER CONFIGURATION OBJECT IT BREAKS WHOLE SECURITY MECHANISM**
+
+###Resource Server Usage
 For simple access to resource server using OAuth 2.0 authorization there is a
 `ResourceServer` implementation.
 
@@ -228,10 +231,10 @@ You can use it in your catberry module like this:
 function ApiClient($oauth2FlowFactory) {
 	var oauth2FlowFactory = $serviceLocator.resolve('oauth2FlowFactory');
 	this.clientToken = oauth2FlowFactory.createResourceServer(
-		'clientToken'
+		'clientToken' // name of resource server from configuration
 	);
 	this.passwordToken = oauth2FlowFactory.createResourceServer(
-		'passwordToken'
+		'passwordToken' // name of resource server from configuration
 	);
 }
 

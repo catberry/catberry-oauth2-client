@@ -229,11 +229,10 @@ You can use it in your catberry module like this:
 
 ```javascript
 function ApiClient($oauth2FlowFactory) {
-	var oauth2FlowFactory = $serviceLocator.resolve('oauth2FlowFactory');
-	this.clientToken = oauth2FlowFactory.createResourceServer(
+	this.clientToken = $oauth2FlowFactory.createResourceServer(
 		'clientToken' // name of resource server from configuration
 	);
-	this.passwordToken = oauth2FlowFactory.createResourceServer(
+	this.passwordToken = $oauth2FlowFactory.createResourceServer(
 		'passwordToken' // name of resource server from configuration
 	);
 }

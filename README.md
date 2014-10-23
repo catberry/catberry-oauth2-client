@@ -108,7 +108,9 @@ For server configuration:
 		
 		// proxy-endpoints for obtaining access token using client credentials
 		"endpoints":{
-			
+
+			// Client Credentials Grant
+			// http://tools.ietf.org/html/rfc6749#section-4.4
 			// this grantType also adds middleware that sets access token for
 			// every http request to connect/express application
 			// name of endpoint is a connect/express routing
@@ -143,6 +145,9 @@ For server configuration:
 					"path": "/"
 				}
 			},
+			// another example of grantType with same parameters
+			// Resource Owner Password Credentials Grant
+			// http://tools.ietf.org/html/rfc6749#section-4.3
 			"auth/user":{
 				"grantType": "password",
 				"scope": "wall, profile, email",
@@ -156,9 +161,11 @@ For server configuration:
 				}
 			},
 			
-			// this endpoint for callback endpoint when use 
+			// this endpoint for redirection URI endpoint when use
 			// OAuth 2.0 Authorization Code Grant
 			// http://tools.ietf.org/html/rfc6749#section-4.1
+			// 2 additional parameters
+			// and scope parameters unsupported
 			"auth/social":{
 				"grantType": "authorization_code",
 				

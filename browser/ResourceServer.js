@@ -33,8 +33,11 @@
 module.exports = ResourceServer;
 
 var util = require('util'),
-	ResourceServerBase = require('./base/ResourceServer'),
-	urlHelper = require('./helpers/urlHelper');
+	ResourceServerBase = require('../lib/base/ResourceServer'),
+	urlHelper = require('../lib/helpers/urlHelper');
+
+var ERROR_REFRESHING = 'Can not refresh this access token',
+	ERROR_REMOVE = 'Can not invalidate current access token';
 
 util.inherits(ResourceServer, ResourceServerBase);
 
@@ -57,7 +60,25 @@ util.inherits(ResourceServer, ResourceServerBase);
  */
 function ResourceServer($serviceLocator, config) {
 	ResourceServerBase.call(this, $serviceLocator, config);
+	this._window = $serviceLocator.resolve('window');
 }
+
+/**
+ * Current browser window.
+ * @type {Windows}
+ * @private
+ */
+ResourceServer.prototype._window = null;
+
+/**
+ * Gets current URL origin.
+ * @returns {string}
+ * @private
+ */
+ResourceServer.prototype._getCurrentOrigin = function () {
+	return this._window.location.protocol + '//' +
+		this._window.location.host;
+};
 
 /**
  * Handles response from resource server.
@@ -68,7 +89,10 @@ function ResourceServer($serviceLocator, config) {
 ResourceServer.prototype._responseHandler = function (context, result) {
 	if (isStatusCodeBad(result.status.code)) {
 		if (result.status.code === 401) {
-			this.refreshAuthorization(context);
+			var redirectUrl = urlHelper.getRefreshPath(this._config.endpoint.name);
+
+			redirectUrl += '?return_uri=' + context.urlPath;
+			return context.redirect(redirectUrl);
 		}
 		var reason = new Error(result.status.text);
 		reason.code = result.status.code;
@@ -84,10 +108,16 @@ ResourceServer.prototype._responseHandler = function (context, result) {
  * @returns {Promise} Promise for nothing.
  */
 ResourceServer.prototype.refreshAuthorization = function (context) {
-	var redirectUrl = urlHelper.getRefreshPath(this._config.endpoint.name);
-
-	redirectUrl += '?return_uri=' + context.urlPath;
-	return context.redirect(redirectUrl);
+	var refreshUrl = this._getCurrentOrigin() +
+		urlHelper.getRefreshPath(this._config.endpoint.name);
+	return this._uhr.get(refreshUrl, {
+		unsafeHTTPS: this._config.unsafeHTTPS
+	})
+		.then(function (result) {
+			if (result.status.code !== 200) {
+				throw new Error(ERROR_REFRESHING);
+			}
+		});
 };
 
 /**
@@ -97,10 +127,20 @@ ResourceServer.prototype.refreshAuthorization = function (context) {
  */
 ResourceServer.prototype.removeAuthorization = function (context) {
 	var token = this.getToken(context),
-		redirectUrl = urlHelper.getRemovePath(this._config.endpoint.name);
+		removeUrl = this._getCurrentOrigin() +
+			urlHelper.getRemovePath(this._config.endpoint.name);
 
-	redirectUrl += '?token=' + token + '&return_uri=' + context.urlPath;
-	return context.redirect(redirectUrl);
+	return this._uhr.get(removeUrl, {
+		unsafeHTTPS: this._config.unsafeHTTPS,
+		data: {
+			token: token
+		}
+	})
+		.then(function (result) {
+			if (result.status.code !== 200) {
+				throw new Error(ERROR_REMOVE);
+			}
+		});
 };
 
 /**

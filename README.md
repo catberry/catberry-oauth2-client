@@ -165,7 +165,7 @@ For server configuration:
 			// OAuth 2.0 Authorization Code Grant
 			// http://tools.ietf.org/html/rfc6749#section-4.1
 			// 2 additional parameters
-			// and scope parameters unsupported
+			// and scope parameter is unsupported
 			"auth/social":{
 				"grantType": "authorization_code",
 				

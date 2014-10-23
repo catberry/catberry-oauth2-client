@@ -81,28 +81,6 @@ ResourceServer.prototype._getCurrentOrigin = function () {
 };
 
 /**
- * Handles response from resource server.
- * @param {Object} context Module context.
- * @param {Object} result Response result.
- * @protected
- */
-ResourceServer.prototype._responseHandler = function (context, result) {
-	if (isStatusCodeBad(result.status.code)) {
-		if (result.status.code === 401) {
-			var redirectUrl = urlHelper.getRefreshPath(this._config.endpoint.name);
-
-			redirectUrl += '?return_uri=' + context.urlPath;
-			return context.redirect(redirectUrl);
-		}
-		var reason = new Error(result.status.text);
-		reason.code = result.status.code;
-		reason.details = result.content;
-		throw reason;
-	}
-	return result.content;
-};
-
-/**
  * Refreshes authorization or remove access and refresh tokens if failed.
  * @param {Object} context Module context.
  * @returns {Promise} Promise for nothing.
@@ -144,10 +122,23 @@ ResourceServer.prototype.removeAuthorization = function (context) {
 };
 
 /**
- * Determines is status code is error.
- * @param {number} statusCode HTTP status code.
- * @returns {boolean} true of code is error.
+ * Handles response from resource server.
+ * @param {Object} context Module context.
+ * @param {Object} result Response result.
+ * @protected
  */
-function isStatusCodeBad(statusCode) {
-	return statusCode < 200 || statusCode >= 400;
-}
+ResourceServer.prototype._responseHandler = function (context, result) {
+	if (this._isStatusCodeBad(result.status.code)) {
+		if (result.status.code === 401) {
+			var redirectUrl = urlHelper.getRefreshPath(this._config.endpoint.name);
+
+			redirectUrl += '?return_uri=' + context.urlPath;
+			return context.redirect(redirectUrl);
+		}
+		var reason = new Error(result.status.text);
+		reason.code = result.status.code;
+		reason.details = result.content;
+		throw reason;
+	}
+	return result.content;
+};

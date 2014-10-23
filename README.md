@@ -285,12 +285,14 @@ ResourceServer.prototype.isAuthorized = function (context) { }
 /**
  * Refreshes authorization or remove access and refresh tokens if failed.
  * @param {Object} context Module context.
+ * @returns {Promise} Promise for nothing.
  */
 ResourceServer.prototype.refreshAuthorization = function (context) { }
 
 /**
  * Removes access and refresh tokens.
  * @param {Object} context Module context.
+ * @returns {Promise} Promise for nothing.
  */
 ResourceServer.prototype.removeAuthorization = function (context) { }
 

@@ -23,7 +23,7 @@ unset all token cookies if refreshing is failed.
 
 If you need OAuth 2.0 Authorization Server you can use some library like
 [node-oauth2-server](https://www.npmjs.org/package/node-oauth2-server) or
-framework for building RESTful APIs like [LoopBack](http://docs.strongloop.com/display/LB/OAuth+2.0)
+framework for building RESTful APIs like [LoopBack](http://docs.strongloop.com/display/LB/OAuth+2.0).
 
 ##Usage
 Plugin consists of two parts:

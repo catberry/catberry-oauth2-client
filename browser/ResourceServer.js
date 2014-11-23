@@ -33,10 +33,12 @@
 module.exports = ResourceServer;
 
 var util = require('util'),
+	Query = require('catberry-uri').Query,
 	ResourceServerBase = require('../lib/base/ResourceServer'),
-	urlHelper = require('../lib/helpers/urlHelper');
+	uriHelper = require('../lib/helpers/uriHelper');
 
-var ERROR_REFRESHING = 'Can not refresh this access token',
+var FIELD_RETURN_URI = 'return_uri',
+	ERROR_REFRESHING = 'Can not refresh this access token',
 	ERROR_REMOVE = 'Can not invalidate current access token';
 
 util.inherits(ResourceServer, ResourceServerBase);
@@ -60,25 +62,7 @@ util.inherits(ResourceServer, ResourceServerBase);
  */
 function ResourceServer($serviceLocator, config) {
 	ResourceServerBase.call(this, $serviceLocator, config);
-	this._window = $serviceLocator.resolve('window');
 }
-
-/**
- * Current browser window.
- * @type {Windows}
- * @private
- */
-ResourceServer.prototype._window = null;
-
-/**
- * Gets current URL origin.
- * @returns {string}
- * @private
- */
-ResourceServer.prototype._getCurrentOrigin = function () {
-	return this._window.location.protocol + '//' +
-		this._window.location.host;
-};
 
 /**
  * Refreshes authorization or remove access and refresh tokens if failed.
@@ -86,9 +70,12 @@ ResourceServer.prototype._getCurrentOrigin = function () {
  * @returns {Promise} Promise for nothing.
  */
 ResourceServer.prototype.refreshAuthorization = function (context) {
-	var refreshUrl = this._getCurrentOrigin() +
-		urlHelper.getRefreshPath(this._config.endpoint.name);
-	return this._uhr.get(refreshUrl, {
+	var refreshUri = context.location.clone();
+	refreshUri.path = uriHelper.getRefreshPath(this._config.endpoint.name);
+	refreshUri.query = null;
+	refreshUri.fragment = null;
+
+	return this._uhr.get(refreshUri.toString(), {
 		unsafeHTTPS: this._config.unsafeHTTPS
 	})
 		.then(function (result) {
@@ -105,10 +92,12 @@ ResourceServer.prototype.refreshAuthorization = function (context) {
  */
 ResourceServer.prototype.removeAuthorization = function (context) {
 	var token = this.getToken(context),
-		removeUrl = this._getCurrentOrigin() +
-			urlHelper.getRemovePath(this._config.endpoint.name);
+		removeUri = context.location.clone();
+	removeUri.path = uriHelper.getRemovePath(this._config.endpoint.name);
+	removeUri.query = null;
+	removeUri.fragment = null;
 
-	return this._uhr.get(removeUrl, {
+	return this._uhr.get(removeUri.toString(), {
 		unsafeHTTPS: this._config.unsafeHTTPS,
 		data: {
 			token: token
@@ -130,10 +119,20 @@ ResourceServer.prototype.removeAuthorization = function (context) {
 ResourceServer.prototype._responseHandler = function (context, result) {
 	if (this._isStatusCodeBad(result.status.code)) {
 		if (result.status.code === 401) {
-			var redirectUrl = urlHelper.getRefreshPath(this._config.endpoint.name);
+			var redirectUri = context.location.clone(),
+				returnUri = context.location.clone();
 
-			redirectUrl += '?return_uri=' + context.urlPath;
-			return context.redirect(redirectUrl);
+			returnUri.scheme = null;
+			returnUri.authority = null;
+
+			redirectUri.path = uriHelper.getRefreshPath(
+				this._config.endpoint.name
+			);
+			redirectUri.fragment = null;
+			redirectUri.query = new Query();
+			redirectUri.query.values = {};
+			redirectUri.query.values[FIELD_RETURN_URI] = returnUri.toString();
+			return context.redirect(redirectUri.toString());
 		}
 		var reason = new Error(result.status.text);
 		reason.code = result.status.code;

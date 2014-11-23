@@ -37,7 +37,8 @@ var assert = require('assert'),
 module.exports = {
 	generateTest: function (config, testCase) {
 		it(testCase.name, function (done) {
-			var localConfig = Object.create(config);
+			var isError = false,
+				localConfig = Object.create(config);
 			localConfig.handler = function (parameters) {
 				// validate request that Client does to Authorization Server
 				try {
@@ -47,10 +48,21 @@ module.exports = {
 					assert.strictEqual(
 						parameters.url, testCase.authServer.request.url
 					);
+					if (testCase.authServer.request.data) {
+						assert.deepEqual(
+							parameters.data, testCase.authServer.request.data
+						);
+					} else {
+						assert.strictEqual(
+							parameters.data, ''
+						);
+					}
+
 					validateHeaders(
 						parameters.headers, testCase.authServer.request.headers
 					);
 				} catch (e) {
+					isError = true;
 					done(e);
 				}
 
@@ -71,7 +83,12 @@ module.exports = {
 				// described in test case and validate response
 				var request = http.request(testCase.request,
 					function (response) {
-						validateResponse(response, testCase.response, done);
+						validateResponse(response, testCase.response,
+							function (error) {
+								if (!isError) {
+									done(error);
+								}
+							});
 					});
 
 				request.end(JSON.stringify(testCase.request.content));
@@ -131,6 +148,13 @@ function validateHeaders(actual, expected) {
 			}
 
 			if (normalizedExpected[headerName] instanceof Array) {
+				assert.strictEqual(
+					normalizedActual[headerName] instanceof Array, true
+				);
+				assert.strictEqual(
+					normalizedActual[headerName].length,
+					normalizedExpected[headerName].length
+				);
 				normalizedExpected[headerName].forEach(function (item, index) {
 					if (typeof (item) === 'string') {
 						assert.notEqual(

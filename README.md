@@ -95,7 +95,7 @@ For server configuration:
 	"authorization": {
 		
 		// OAuth 2.0 authorization server with "/token" endpoint
-		"authServerUrl": "https://example.org/",
+		"authServerUrl": "https://example.org",
 		
 		// client credentials
 		"clientId": "some_client_id",

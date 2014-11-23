@@ -30,29 +30,14 @@
 
 'use strict';
 
-var UHRMock = require('../mocks/UHRMock'),
-	LoggerMock = require('../mocks/LoggerMock'),
-	express = require('express'),
-	OAuth2FlowFactory = require('../../lib/OAuth2FlowFactory'),
-	ServiceLocator = require('catberry-locator');
+var testHelper = require('../../helpers/testHelper'),
+	testCases = require('../../cases/ClientCredentialsFlowEndpoint.json');
 
-module.exports = {
-	createApp: function (config) {
-		var locator = new ServiceLocator();
-		locator.registerInstance('serviceLocator', locator);
-		locator.registerInstance('config', config);
-		locator.registerInstance('logger', new LoggerMock());
-		locator.register('oauth2FlowFactory', OAuth2FlowFactory, config, true);
-		locator.register('uhr', UHRMock, config, true);
+describe('ClientCredentialsFlowEndpoint', function () {
 
-		var app = express(),
-			factory = locator.resolve('oauth2FlowFactory');
-
-		factory.addEndpoints(app);
-		app.use(function (request, response) {
-			response.writeHead(200);
-			response.end();
+	describe('#handler', function () {
+		testCases.cases.forEach(function (testCase) {
+			testHelper.generateTest(testCases.config, testCase);
 		});
-		return app;
-	}
-};
+	});
+});

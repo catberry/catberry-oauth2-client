@@ -1,0 +1,333 @@
+{
+	"config": {
+		"authorization": {
+			"authServerUrl": "https://example.org",
+			"clientId": "some_client_id",
+			"clientSecret": "some_client_secret",
+			"tokenEndpointPath": "/token",
+			"endpoints": {
+				"auth/social": {
+					"grantType": "authorization_code",
+					"redirectUri": "https://example.org/social",
+					"returnUri": "/return",
+					"cookie": {
+						"accessTokenName": "acat",
+						"refreshTokenName": "reacat"
+					}
+				}
+			}
+		}
+	},
+	"cases": [
+		{
+			"name": "should set cookie with access token and redirect",
+			"request": {
+				"method": "GET",
+				"port": 8001,
+				"path": "/auth/social?code=someauthcodehere"
+			},
+			"response": {
+				"code": 302,
+				"headers": {
+					"set-cookie": ["acat=someaccesstoken"],
+					"location": "/return"
+				},
+				"content": null
+			},
+			"authServer": {
+				"request": {
+					"url": "https://example.org/token",
+					"method": "POST",
+					"headers": {
+						"Authorization": "Basic c29tZV9jbGllbnRfaWQ6c29tZV9jbGllbnRfc2VjcmV0",
+						"Content-type": "application/x-www-form-urlencoded"
+					},
+					"data": {
+						"grant_type": "authorization_code",
+						"code": "someauthcodehere",
+						"redirect_uri": "https://example.org/social"
+					}
+				},
+				"response": {
+					"code": 200,
+					"headers": {},
+					"content": {
+						"access_token": "someaccesstoken",
+						"token_type": "bearer"
+					}
+				}
+			}
+		},
+		{
+			"name": "should return refresh token if it has been received",
+			"request": {
+				"method": "GET",
+				"port": 8002,
+				"path": "/auth/social?code=someauthcodehere"
+			},
+			"response": {
+				"code": 302,
+				"headers": {
+					"set-cookie": [
+						"acat=someaccesstoken", "reacat=somerefreshtoken"
+					],
+					"location": "/return"
+				},
+				"content": null
+			},
+			"authServer": {
+				"request": {
+					"url": "https://example.org/token",
+					"method": "POST",
+					"headers": {
+						"Authorization": "Basic c29tZV9jbGllbnRfaWQ6c29tZV9jbGllbnRfc2VjcmV0",
+						"Content-type": "application/x-www-form-urlencoded"
+					},
+					"data": {
+						"grant_type": "authorization_code",
+						"code": "someauthcodehere",
+						"redirect_uri": "https://example.org/social"
+					}
+				},
+				"response": {
+					"code": 200,
+					"headers": {},
+					"content": {
+						"access_token": "someaccesstoken",
+						"refresh_token": "somerefreshtoken",
+						"token_type": "bearer"
+					}
+				}
+			}
+		},
+		{
+			"name": "should return error if code is not passed",
+			"request": {
+				"method": "GET",
+				"port": 8003,
+				"path": "/auth/social"
+			},
+			"response": {
+				"code": 400,
+				"headers": {
+					"set-cookie": null,
+					"location": null
+				},
+				"content": {
+					"error":"invalid_request",
+					"error_description": "\"code\" is required parameter"
+				}
+			},
+			"authServer": {
+				"request": {
+					"url": "https://example.org/token",
+					"method": "POST",
+					"headers": {
+						"Authorization": "Basic c29tZV9jbGllbnRfaWQ6c29tZV9jbGllbnRfc2VjcmV0",
+						"Content-type": "application/x-www-form-urlencoded"
+					},
+					"data": {
+						"grant_type": "authorization_code",
+						"code": "someauthcodehere",
+						"redirect_uri": "https://example.org/social"
+					}
+				},
+				"response": {
+					"code": 200,
+					"headers": {},
+					"content": {
+						"access_token": "someaccesstoken",
+						"token_type": "bearer"
+					}
+				}
+			}
+		},
+		{
+			"name": "should pass error from authorization server",
+			"request": {
+				"method": "GET",
+				"port": 8004,
+				"path": "/auth/social?code=someauthcodehere"
+			},
+			"response": {
+				"code": 500,
+				"headers": {
+					"set-cookie": null,
+					"location": null
+				},
+				"content": {
+					"hello": "world"
+				}
+			},
+			"authServer": {
+				"request": {
+					"url": "https://example.org/token",
+					"method": "POST",
+					"headers": {
+						"Authorization": "Basic c29tZV9jbGllbnRfaWQ6c29tZV9jbGllbnRfc2VjcmV0",
+						"Content-type": "application/x-www-form-urlencoded"
+					},
+					"data": {
+						"grant_type": "authorization_code",
+						"code": "someauthcodehere",
+						"redirect_uri": "https://example.org/social"
+					}
+				},
+				"response": {
+					"code": 500,
+					"headers": {},
+					"content": {
+						"hello": "world"
+					}
+				}
+			}
+		},
+		{
+			"name": "should return error if token type is absent",
+			"request": {
+				"method": "GET",
+				"port": 8005,
+				"path": "/auth/social?code=someauthcodehere"
+			},
+			"response": {
+				"code": 500,
+				"headers": {
+					"set-cookie": null,
+					"location": null
+				},
+				"content": {
+					"error":"invalid_client",
+					"error_description": "Response from authorization server does not have required \"token_type\" field"
+				}
+			},
+			"authServer": {
+				"request": {
+					"url": "https://example.org/token",
+					"method": "POST",
+					"headers": {
+						"Authorization": "Basic c29tZV9jbGllbnRfaWQ6c29tZV9jbGllbnRfc2VjcmV0",
+						"Content-type": "application/x-www-form-urlencoded"
+					},
+					"data": {
+						"grant_type": "authorization_code",
+						"code": "someauthcodehere",
+						"redirect_uri": "https://example.org/social"
+					}
+				},
+				"response": {
+					"code": 200,
+					"headers": {},
+					"content": {
+						"access_token": "someaccesstoken"
+					}
+				}
+			}
+		},
+		{
+			"name": "should return error if token type is unsupported",
+			"request": {
+				"method": "GET",
+				"port": 8006,
+				"path": "/auth/social?code=someauthcodehere"
+			},
+			"response": {
+				"code": 500,
+				"headers": {
+					"set-cookie": null,
+					"location": null
+				},
+				"content": {
+					"error":"invalid_client",
+					"error_description": "Only Bearer token type is supported"
+				}
+			},
+			"authServer": {
+				"request": {
+					"url": "https://example.org/token",
+					"method": "POST",
+					"headers": {
+						"Authorization": "Basic c29tZV9jbGllbnRfaWQ6c29tZV9jbGllbnRfc2VjcmV0",
+						"Content-type": "application/x-www-form-urlencoded"
+					},
+					"data": {
+						"grant_type": "authorization_code",
+						"code": "someauthcodehere",
+						"redirect_uri": "https://example.org/social"
+					}
+				},
+				"response": {
+					"code": 200,
+					"headers": {},
+					"content": {
+						"access_token": "someaccesstoken",
+						"token_type": "some"
+					}
+				}
+			}
+		},
+		{
+			"name": "should return error if token is absent",
+			"request": {
+				"method": "GET",
+				"port": 8007,
+				"path": "/auth/social?code=someauthcodehere"
+			},
+			"response": {
+				"code": 500,
+				"headers": {
+					"set-cookie": null,
+					"location": null
+				},
+				"content": {
+					"error":"invalid_client",
+					"error_description": "Response from authorization server does not have required \"access_token\" field"
+				}
+			},
+			"authServer": {
+				"request": {
+					"url": "https://example.org/token",
+					"method": "POST",
+					"headers": {
+						"Authorization": "Basic c29tZV9jbGllbnRfaWQ6c29tZV9jbGllbnRfc2VjcmV0",
+						"Content-type": "application/x-www-form-urlencoded"
+					},
+					"data": {
+						"grant_type": "authorization_code",
+						"code": "someauthcodehere",
+						"redirect_uri": "https://example.org/social"
+					}
+				},
+				"response": {
+					"code": 200,
+					"headers": {},
+					"content": {
+						"token_type": "Bearer"
+					}
+				}
+			}
+		},
+		{
+			"name": "should return error if wrong HTTP method",
+			"request": {
+				"method": "POST",
+				"port": 8008,
+				"path": "/auth/social?code=someauthcodehere"
+			},
+			"response": {
+				"code": 405,
+				"headers": {
+					"set-cookie": null,
+					"location": null
+				},
+				"content": {
+					"error":"invalid_request",
+					"error_description": "Only \"GET\" method is allowed"
+				}
+			},
+			"authServer": {
+				"request": null,
+				"response": null
+			}
+		}
+	]
+}

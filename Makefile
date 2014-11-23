@@ -2,8 +2,7 @@
 SRC = lib/*.js \
 	browser/*.js
 
-TESTS = test/lib/* \
-	test/browser/*
+TESTS = test/lib/*
 
 all: lint test
 

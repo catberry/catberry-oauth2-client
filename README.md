@@ -4,7 +4,7 @@
 ##Description
 This plugin implements "client" and "resource server" 
 [roles](http://tools.ietf.org/html/rfc6749#section-1.1) from OAuth 2.0 
-([RFC-6749](http://www.rfc-base.org/txt/rfc-6749.txt)). 
+([RFC-6749](https://tools.ietf.org/html/rfc6749)).
 
 Supports grant types:
 

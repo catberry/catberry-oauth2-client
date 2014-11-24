@@ -267,6 +267,26 @@
 				"request": null,
 				"response": null
 			}
+		},
+		{
+			"name": "should just redirect if there is no cookie and parameter with access token",
+			"request": {
+				"method": "GET",
+				"port": 8311,
+				"path": "/auth/guest/remove?return_uri=/some"
+			},
+			"response": {
+				"code": 302,
+				"headers": {
+					"set-cookie": null,
+					"location": "/some"
+				},
+				"content": null
+			},
+			"authServer": {
+				"request": null,
+				"response": null
+			}
 		}
 	]
 }

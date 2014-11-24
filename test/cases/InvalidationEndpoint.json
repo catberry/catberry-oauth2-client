@@ -1,0 +1,272 @@
+{
+	"config": {
+		"authorization": {
+			"authServerUrl": "https://example.org",
+			"clientId": "some_client_id",
+			"clientSecret": "some_client_secret",
+			"tokenEndpointPath": "/token",
+			"endpoints": {
+				"auth/guest": {
+					"grantType": "client_credentials",
+					"scope": "wall",
+
+					"cookie": {
+						"accessTokenName": "ccat",
+						"refreshTokenName": "reccat"
+					}
+				}
+			}
+		}
+	},
+	"cases": [
+		{
+			"name": "should remove access and refresh tokens from cookies",
+			"request": {
+				"method": "GET",
+				"port": 8301,
+				"headers": {
+					"cookie": "ccat=someaccesstoken; reccat=somerefreshtoken"
+				},
+				"path": "/auth/guest/remove?token=someaccesstoken"
+			},
+			"response": {
+				"code": 200,
+				"headers": {
+					"set-cookie": [
+						"ccat=; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT",
+						"reccat=; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+					],
+					"location": null
+				},
+				"content": null
+			},
+			"authServer": {
+				"request": null,
+				"response": null
+			}
+		},
+		{
+			"name": "should do nothing if there is no access or refresh tokens",
+			"request": {
+				"method": "GET",
+				"port": 8302,
+				"path": "/auth/guest/remove"
+			},
+			"response": {
+				"code": 200,
+				"headers": {
+					"set-cookie": null,
+					"location": null
+				},
+				"content": null
+			},
+			"authServer": {
+				"request": null,
+				"response": null
+			}
+		},
+		{
+			"name": "should remove only access if refresh token is absent",
+			"request": {
+				"method": "GET",
+				"port": 8303,
+				"headers": {
+					"cookie": "ccat=someaccesstoken"
+				},
+				"path": "/auth/guest/remove?token=someaccesstoken"
+			},
+			"response": {
+				"code": 200,
+				"headers": {
+					"set-cookie": [
+						"ccat=; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+					],
+					"location": null
+				},
+				"content": null
+			},
+			"authServer": {
+				"request": null,
+				"response": null
+			}
+		},
+		{
+			"name": "should remove only refresh if access token is absent",
+			"request": {
+				"method": "GET",
+				"port": 8304,
+				"headers": {
+					"cookie": "reccat=someaccesstoken"
+				},
+				"path": "/auth/guest/remove"
+			},
+			"response": {
+				"code": 200,
+				"headers": {
+					"set-cookie": [
+						"reccat=; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+					],
+					"location": null
+				},
+				"content": null
+			},
+			"authServer": {
+				"request": null,
+				"response": null
+			}
+		},
+		{
+			"name": "should return error if access token is wrong",
+			"request": {
+				"method": "GET",
+				"port": 8305,
+				"headers": {
+					"cookie": "ccat=someaccesstoken"
+				},
+				"path": "/auth/guest/remove?token=wrong"
+			},
+			"response": {
+				"code": 403,
+				"headers": {
+					"set-cookie": null,
+					"location": null
+				},
+				"content": {
+					"error": "invalid_request",
+					"error_description": "Wrong token specified for invalidation"
+				}
+			},
+			"authServer": {
+				"request": null,
+				"response": null
+			}
+		},
+		{
+			"name": "should return error if access token exists in cookies but not in query string",
+			"request": {
+				"method": "GET",
+				"port": 8306,
+				"headers": {
+					"cookie": "ccat=someaccesstoken",
+					"location": null
+				},
+				"path": "/auth/guest/remove"
+			},
+			"response": {
+				"code": 403,
+				"headers": {
+					"set-cookie": null
+				},
+				"content": {
+					"error": "invalid_request",
+					"error_description": "Wrong token specified for invalidation"
+				}
+			},
+			"authServer": {
+				"request": null,
+				"response": null
+			}
+		},
+		{
+			"name": "should not return error if access token exists in query string but not in cookies",
+			"request": {
+				"method": "GET",
+				"port": 8307,
+				"path": "/auth/guest/remove?token=someaccesstoken"
+			},
+			"response": {
+				"code": 200,
+				"headers": {
+					"set-cookie": null,
+					"location": null
+				},
+				"content": null
+			},
+			"authServer": {
+				"request": null,
+				"response": null
+			}
+		},
+		{
+			"name": "should redirect after removing cookies",
+			"request": {
+				"method": "GET",
+				"port": 8308,
+				"headers": {
+					"cookie": "ccat=someaccesstoken; reccat=somerefreshtoken"
+				},
+				"path": "/auth/guest/remove?token=someaccesstoken&return_uri=/some"
+			},
+			"response": {
+				"code": 302,
+				"headers": {
+					"set-cookie": [
+						"ccat=; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT",
+						"reccat=; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+					],
+					"location": "/some"
+				},
+				"content": null
+			},
+			"authServer": {
+				"request": null,
+				"response": null
+			}
+		},
+		{
+			"name": "should return error if redirect URI is absolute",
+			"request": {
+				"method": "GET",
+				"port": 8309,
+				"headers": {
+					"cookie": "ccat=someaccesstoken; reccat=somerefreshtoken"
+				},
+				"path": "/auth/guest/remove?token=someaccesstoken&return_uri=http://example.org/some"
+			},
+			"response": {
+				"code": 400,
+				"headers": {
+					"set-cookie": [
+						"ccat=; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT",
+						"reccat=; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+					],
+					"location": null
+				},
+				"content": {
+					"error": "invalid_request",
+					"error_description": "Can not redirect to location \"http://example.org/some\""
+				}
+			},
+			"authServer": {
+				"request": null,
+				"response": null
+			}
+		},
+		{
+			"name": "should return error if method is not GET",
+			"request": {
+				"method": "POST",
+				"port": 8310,
+				"headers": {
+					"cookie": "ccat=someaccesstoken; reccat=somerefreshtoken&return_uri=http://example.org/some"
+				},
+				"path": "/auth/guest/remove?token=someaccesstoken"
+			},
+			"response": {
+				"code": 405,
+				"headers": {
+					"set-cookie": null,
+					"location": null
+				},
+				"content": {
+					"error": "invalid_request",
+					"error_description": "Only \"GET\" method is allowed"
+				}
+			},
+			"authServer": {
+				"request": null,
+				"response": null
+			}
+		}
+	]
+}

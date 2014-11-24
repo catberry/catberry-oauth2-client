@@ -31,6 +31,7 @@
 'use strict';
 
 var assert = require('assert'),
+	Query = require('catberry-uri').Query,
 	environmentHelper = require('./environmentHelper'),
 	http = require('http');
 
@@ -91,7 +92,9 @@ module.exports = {
 							});
 					});
 
-				request.end(JSON.stringify(testCase.request.content));
+				var entity = new Query();
+				entity.values = testCase.request.data;
+				request.end(entity.toString());
 			});
 		});
 	}

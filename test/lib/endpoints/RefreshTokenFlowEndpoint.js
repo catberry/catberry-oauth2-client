@@ -31,7 +31,7 @@
 'use strict';
 
 var testHelper = require('../../helpers/testHelper'),
-	testCases = require('../../cases/RefreshTokenFlowEndpoint.json');
+	testCases = require('../../cases/endpoints/RefreshTokenFlowEndpoint.json');
 
 describe('RefreshTokenFlowEndpoint', function () {
 

@@ -31,7 +31,7 @@
 'use strict';
 
 var testHelper = require('../../helpers/testHelper'),
-	testCases = require('../../cases/AuthorizationCodeFlowEndpoint.json');
+	testCases = require('../../cases/endpoints/AuthorizationCodeFlowEndpoint.json');
 
 describe('AuthorizationCodeFlowEndpoint', function () {
 

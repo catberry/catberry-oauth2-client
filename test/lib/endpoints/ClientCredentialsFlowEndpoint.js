@@ -31,7 +31,7 @@
 'use strict';
 
 var testHelper = require('../../helpers/testHelper'),
-	testCases = require('../../cases/ClientCredentialsFlowEndpoint.json');
+	testCases = require('../../cases/endpoints/ClientCredentialsFlowEndpoint.json');
 
 describe('ClientCredentialsFlowEndpoint', function () {
 

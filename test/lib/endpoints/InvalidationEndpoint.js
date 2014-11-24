@@ -31,7 +31,7 @@
 'use strict';
 
 var testHelper = require('../../helpers/testHelper'),
-	testCases = require('../../cases/InvalidationEndpoint.json');
+	testCases = require('../../cases/endpoints/InvalidationEndpoint.json');
 
 describe('InvalidationEndpoint', function () {
 

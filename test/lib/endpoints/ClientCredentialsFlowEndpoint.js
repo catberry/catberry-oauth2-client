@@ -37,7 +37,7 @@ describe('ClientCredentialsFlowEndpoint', function () {
 
 	describe('#handler', function () {
 		testCases.cases.forEach(function (testCase) {
-			testHelper.generateTest(testCases.config, testCase);
+			testHelper.generateEndpointTest(testCases.config, testCase);
 		});
 	});
 });

@@ -36,7 +36,7 @@ var assert = require('assert'),
 	http = require('http');
 
 module.exports = {
-	generateTest: function (config, testCase) {
+	generateEndpointTest: function (config, testCase) {
 		it(testCase.name, function (done) {
 			var isError = false,
 				localConfig = Object.create(config);

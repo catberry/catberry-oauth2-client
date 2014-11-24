@@ -31,13 +31,24 @@
 'use strict';
 
 var testHelper = require('../../helpers/testHelper'),
-	testCases = require('../../cases/endpoints/RefreshTokenFlowEndpoint.json');
+	RefreshTokenFlowEndpoint =
+		require('../../../lib/endpoints/RefreshTokenFlowEndpoint'),
+	configCases =
+		require('../../cases/configs/RefreshTokenFlow.json'),
+	endpointCases =
+		require('../../cases/endpoints/RefreshTokenFlowEndpoint.json');
 
 describe('RefreshTokenFlowEndpoint', function () {
-
+	describe('#constructor', function () {
+		configCases.cases.forEach(function (testCase) {
+			testHelper.generateConfigTest(
+				RefreshTokenFlowEndpoint, testCase
+			);
+		});
+	});
 	describe('#handler', function () {
-		testCases.cases.forEach(function (testCase) {
-			testHelper.generateEndpointTest(testCases.config, testCase);
+		endpointCases.cases.forEach(function (testCase) {
+			testHelper.generateEndpointTest(endpointCases.config, testCase);
 		});
 	});
 });

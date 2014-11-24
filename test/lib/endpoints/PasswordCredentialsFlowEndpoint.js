@@ -31,13 +31,24 @@
 'use strict';
 
 var testHelper = require('../../helpers/testHelper'),
-	testCases = require('../../cases/endpoints/PasswordCredentialsFlowEndpoint.json');
+	ClientCredentialsFlowEndpoint =
+		require('../../../lib/endpoints/PasswordCredentialsFlowEndpoint'),
+	configCases =
+		require('../../cases/configs/PasswordCredentialsFlow.json'),
+	endpointCases =
+		require('../../cases/endpoints/PasswordCredentialsFlowEndpoint.json');
 
 describe('PasswordCredentialsFlowEndpoint', function () {
-
+	describe('#constructor', function () {
+		configCases.cases.forEach(function (testCase) {
+			testHelper.generateConfigTest(
+				ClientCredentialsFlowEndpoint, testCase
+			);
+		});
+	});
 	describe('#handler', function () {
-		testCases.cases.forEach(function (testCase) {
-			testHelper.generateEndpointTest(testCases.config, testCase);
+		endpointCases.cases.forEach(function (testCase) {
+			testHelper.generateEndpointTest(endpointCases.config, testCase);
 		});
 	});
 });

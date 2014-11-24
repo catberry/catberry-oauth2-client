@@ -31,13 +31,23 @@
 'use strict';
 
 var testHelper = require('../../helpers/testHelper'),
-	testCases = require('../../cases/endpoints/AuthorizationCodeFlowEndpoint.json');
+	AuthorizationCodeFlowEndpoint =
+		require('../../../lib/endpoints/AuthorizationCodeFlowEndpoint'),
+	configCases = require('../../cases/configs/AuthorizationCodeFlow.json'),
+	endpointCases =
+		require('../../cases/endpoints/AuthorizationCodeFlowEndpoint.json');
 
 describe('AuthorizationCodeFlowEndpoint', function () {
-
+	describe('#constructor', function () {
+		configCases.cases.forEach(function (testCase) {
+			testHelper.generateConfigTest(
+				AuthorizationCodeFlowEndpoint, testCase
+			);
+		});
+	});
 	describe('#handler', function () {
-		testCases.cases.forEach(function (testCase) {
-			testHelper.generateEndpointTest(testCases.config, testCase);
+		endpointCases.cases.forEach(function (testCase) {
+			testHelper.generateEndpointTest(endpointCases.config, testCase);
 		});
 	});
 });

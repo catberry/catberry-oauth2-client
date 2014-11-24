@@ -143,6 +143,27 @@
 			"error": "Config parameter \"clientId\" must be specified"
 		},
 		{
+			"name": "should throw error if clientId has colon",
+			"config": {
+				"authorization": {
+					"authServerUrl": "https://example.org",
+					"clientId": "some_client:_id",
+					"clientSecret": "some_client:_secret"
+				},
+				"endpoint": {
+					"name": "auth/social",
+					"redirectUri": "https://example.org/social",
+					"returnUri": "/return",
+					"cookie": {
+						"accessTokenName": "acat",
+						"refreshTokenName": "reacat"
+					}
+				}
+			},
+
+			"error": "Client ID or client secret must not contain colon (':') character"
+		},
+		{
 			"name": "should throw error if clientSecret is not set",
 			"config": {
 				"authorization": {

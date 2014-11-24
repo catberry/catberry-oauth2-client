@@ -37,13 +37,17 @@ var UHRMock = require('../mocks/UHRMock'),
 	ServiceLocator = require('catberry-locator');
 
 module.exports = {
-	createApp: function (config) {
+	createLocator: function (config) {
 		var locator = new ServiceLocator();
 		locator.registerInstance('serviceLocator', locator);
 		locator.registerInstance('config', config);
 		locator.registerInstance('logger', new LoggerMock());
 		locator.register('oauth2FlowFactory', OAuth2FlowFactory, config, true);
 		locator.register('uhr', UHRMock, config, true);
+		return locator;
+	},
+	createApp: function (config) {
+		var locator = module.exports.createLocator(config);
 
 		var app = express(),
 			factory = locator.resolve('oauth2FlowFactory');

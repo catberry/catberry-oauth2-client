@@ -36,6 +36,50 @@ var assert = require('assert'),
 	http = require('http');
 
 module.exports = {
+	generateConfigTest: function (Constructor, testCase) {
+		it(testCase.name, function () {
+			try {
+				var locator = environmentHelper.createLocator(testCase.config),
+					endpoint = new Constructor(
+						locator, testCase.config.authorization,
+						testCase.config.endpoint
+					);
+
+				Object.keys(testCase.expected.sender)
+					.forEach(function (key) {
+						assert.deepEqual(
+							endpoint._sender[key],
+							testCase.expected.sender[key]
+						);
+					});
+				Object.keys(testCase.expected.endpoint)
+					.forEach(function (key) {
+						if (testCase.expected.endpoint[key] &&
+							typeof(testCase.expected.endpoint[key]) === 'object'
+						) {
+							Object.keys(testCase.expected.endpoint[key])
+								.forEach(function (innerKey) {
+									assert.strictEqual(
+										endpoint[key][innerKey],
+										testCase.expected.endpoint[key][innerKey]
+									);
+								});
+						} else {
+							assert.deepEqual(
+								endpoint[key],
+								testCase.expected.endpoint[key]
+							);
+						}
+					});
+			} catch (e) {
+				if (testCase.error) {
+					assert.strictEqual(e.message, testCase.error);
+				} else {
+					throw e;
+				}
+			}
+		});
+	},
 	generateEndpointTest: function (config, testCase) {
 		it(testCase.name, function (done) {
 			var isError = false,

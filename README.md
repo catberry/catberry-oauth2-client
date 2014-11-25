@@ -8,10 +8,10 @@ This plugin implements "client" and "resource server"
 
 Supports grant types:
 
-* Client Credentials (authorization middleware + endpoint)
-* Resource Owner Password Credentials (endpoint)
-* Authorization Code Grant (endpoint for callback)
-* Refresh token (endpoint)
+* [Client Credentials](https://tools.ietf.org/html/rfc6749#section-4.4) (authorization middleware + endpoint)
+* [Resource Owner Password Credentials](https://tools.ietf.org/html/rfc6749#section-4.3) (endpoint)
+* [Authorization Code Grant](https://tools.ietf.org/html/rfc6749#section-4.1) (endpoint for callback)
+* [Refresh token](https://tools.ietf.org/html/rfc6749#section-6) (endpoint)
 
 Supports Bearer ([RFC-6750](http://tools.ietf.org/html/rfc6750)) token type.
 

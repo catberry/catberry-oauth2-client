@@ -1,0 +1,163 @@
+{
+	"cases": [
+		{
+			"name": "should properly set all configuration to instance",
+			"config": {
+				"authorization": {
+					"resourceServers": {
+						"some": {
+							"unsafeHTTPS": true,
+							"host": "https://example.org",
+							"endpoint": {
+								"name": "auth/guest",
+								"accessTokenName": "ccat"
+							}
+						}
+					}
+				}
+			},
+			"createName": "some",
+			"expectedConfig": {
+				"unsafeHTTPS": true,
+				"host": "https://example.org",
+				"endpoint": {
+					"name": "auth/guest",
+					"accessTokenName": "ccat"
+				}
+			},
+
+			"error": null
+		},
+		{
+			"name": "should use default values if needed",
+			"config": {
+				"authorization": {
+					"resourceServers": {
+						"some": {
+							"host": "https://example.org",
+							"endpoint": {
+								"name": "auth/guest",
+								"accessTokenName": "ccat"
+							}
+						}
+					}
+				}
+			},
+			"createName": "some",
+			"expectedConfig": {
+				"unsafeHTTPS": false,
+				"host": "https://example.org",
+				"endpoint": {
+					"name": "auth/guest",
+					"accessTokenName": "ccat"
+				}
+			},
+
+			"error": null
+		},
+		{
+			"name": "should throw error if host is undefined",
+			"config": {
+				"authorization": {
+					"resourceServers": {
+						"some": {
+							"endpoint": {
+								"name": "auth/guest",
+								"accessTokenName": "ccat"
+							}
+						}
+					}
+				}
+			},
+			"createName": "some",
+			"error": "\"host\" parameter not defined"
+		},
+		{
+			"name": "should throw error if endpoint.name is undefined",
+			"config": {
+				"authorization": {
+					"resourceServers": {
+						"some": {
+							"host": "https://example.org",
+							"endpoint": {
+								"accessTokenName": "ccat"
+							}
+						}
+					}
+				}
+			},
+			"createName": "some",
+			"error": "\"endpoint.name\" parameter not defined"
+		},
+		{
+			"name": "should throw error if endpoint.accessTokenName is undefined",
+			"config": {
+				"authorization": {
+					"resourceServers": {
+						"some": {
+							"host": "https://example.org",
+							"endpoint": {
+								"name": "auth/guest"
+							}
+						}
+					}
+				}
+			},
+			"createName": "some",
+			"error": "\"endpoint.accessTokenName\" parameter not defined"
+		},
+		{
+			"name": "should throw error if endpoint config is undefined",
+			"config": {
+				"authorization": {
+					"resourceServers": {
+						"some": {
+							"host": "https://example.org"
+						}
+					}
+				}
+			},
+			"createName": "some",
+			"error": "\"endpoint\" parameters must be an object"
+		},
+		{
+			"name": "should throw error if wrong resource server name",
+			"config": {
+				"authorization": {
+					"resourceServers": {
+						"some": {
+							"unsafeHTTPS": true,
+							"host": "https://example.org",
+							"endpoint": {
+								"name": "auth/guest",
+								"accessTokenName": "ccat"
+							}
+						}
+					}
+				}
+			},
+			"createName": "some2",
+			"error": "Configuration for resource server \"some2\" not found"
+		},
+		{
+			"name": "should throw error if no resource server configuration",
+			"config": {
+				"authorization": {}
+			},
+			"createName": "some",
+			"error": "Configuration for resource server \"some\" not found"
+		},
+		{
+			"name": "should throw error if resource server configuration is not ab object",
+			"config": {
+				"authorization": {
+					"resourceServers": {
+						"some": 5
+					}
+				}
+			},
+			"createName": "some",
+			"error": "Config must be an object"
+		}
+	]
+}

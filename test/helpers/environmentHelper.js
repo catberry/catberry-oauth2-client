@@ -46,11 +46,13 @@ module.exports = {
 		locator.register('uhr', UHRMock, config, true);
 		return locator;
 	},
-	createApp: function (config) {
+	createFactory: function (config) {
 		var locator = module.exports.createLocator(config);
-
-		var app = express(),
-			factory = locator.resolve('oauth2FlowFactory');
+		return locator.resolve('oauth2FlowFactory');
+	},
+	createApp: function (config) {
+		var factory = module.exports.createFactory(config),
+			app = express();
 
 		factory.addEndpoints(app);
 		app.use(function (request, response) {

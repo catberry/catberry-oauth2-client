@@ -33,12 +33,10 @@
 module.exports = ResourceServer;
 
 var util = require('util'),
-	Query = require('catberry-uri').Query,
 	ResourceServerBase = require('../lib/base/ResourceServer'),
 	uriHelper = require('../lib/helpers/uriHelper');
 
-var FIELD_RETURN_URI = 'return_uri',
-	ERROR_REFRESHING = 'Can not refresh this access token',
+var ERROR_REFRESHING = 'Can not refresh this access token',
 	ERROR_REMOVE = 'Can not invalidate current access token';
 
 util.inherits(ResourceServer, ResourceServerBase);
@@ -108,36 +106,4 @@ ResourceServer.prototype.removeAuthorization = function (context) {
 				throw new Error(ERROR_REMOVE);
 			}
 		});
-};
-
-/**
- * Handles response from resource server.
- * @param {Object} context Module context.
- * @param {Object} result Response result.
- * @protected
- */
-ResourceServer.prototype._responseHandler = function (context, result) {
-	if (this._isStatusCodeBad(result.status.code)) {
-		if (result.status.code === 401) {
-			var redirectUri = context.location.clone(),
-				returnUri = context.location.clone();
-
-			returnUri.scheme = null;
-			returnUri.authority = null;
-
-			redirectUri.path = uriHelper.getRefreshPath(
-				this._config.endpoint.name
-			);
-			redirectUri.fragment = null;
-			redirectUri.query = new Query();
-			redirectUri.query.values = {};
-			redirectUri.query.values[FIELD_RETURN_URI] = returnUri.toString();
-			return context.redirect(redirectUri.toString());
-		}
-		var reason = new Error(result.status.text);
-		reason.code = result.status.code;
-		reason.details = result.content;
-		throw reason;
-	}
-	return result.content;
 };

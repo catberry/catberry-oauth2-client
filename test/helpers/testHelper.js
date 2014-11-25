@@ -160,6 +160,7 @@ module.exports = {
 					},
 					redirect: function (url) {
 						assert.strictEqual(url, testCase.redirect);
+						return Promise.resolve();
 					}
 				};
 

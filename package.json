@@ -1,11 +1,11 @@
 {
 	"name": "catberry-oauth2-client",
-	"version": "1.0.0-dev",
+	"version": "1.0.0",
 	"author": "Denis Rechkunov <denis.rechkunov@gmail.com>",
 	"description": "OAuth 2.0 Client Plugin for Catberry Framework 2.0",
 	"homepage": "https://github.com/catberry/catberry-oauth2-client",
 	"keywords": [
-		"catberry", "authorization", "security", "oauth", "authentication"
+		"catberry", "authorization", "security", "oauth", "authentication", "rfc6749"
 	],
 	"bugs": {
 		"url": "https://github.com/catberry/catberry-oauth2-client/issues",

@@ -2,7 +2,7 @@
 [![NPM](https://nodei.co/npm/catberry-oauth2-client.png)](https://nodei.co/npm/catberry-oauth2-client/)
 
 ##Description
-This plugin implements "client" and "resource server" 
+This plugin implements "Client" and "Resource Server"
 [roles](http://tools.ietf.org/html/rfc6749#section-1.1) from OAuth 2.0 
 ([RFC-6749](https://tools.ietf.org/html/rfc6749)).
 
@@ -13,7 +13,7 @@ Supports grant types:
 * [Authorization Code Grant](https://tools.ietf.org/html/rfc6749#section-4.1) (endpoint for callback)
 * [Refresh token](https://tools.ietf.org/html/rfc6749#section-6) (endpoint)
 
-Supports Bearer ([RFC-6750](http://tools.ietf.org/html/rfc6750)) token type.
+Supports [Bearer](http://tools.ietf.org/html/rfc6750#section-6.1.1) ([RFC-6750](http://tools.ietf.org/html/rfc6750)) token type.
 
 This plugin sets access and refresh token to specified cookies and uses them
 to do all requests to resource server.

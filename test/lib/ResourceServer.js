@@ -174,7 +174,6 @@ describe('ResourceServer', function () {
 			assert.strictEqual(isAuthorized, false);
 		});
 	});
-
 	describe('#removeAuthorization', function () {
 		it('should redirect to remove endpoint', function () {
 			var config = {

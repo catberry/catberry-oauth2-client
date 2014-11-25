@@ -1,4 +1,4 @@
-#OAuth 2.0 Client Plugin for Catberry Framework 2.0 [![Build Status](https://travis-ci.org/catberry/catberry-oauth2-client.png?branch=master)](https://travis-ci.org/catberry/catberry-oauth2-client) [![Coverage Status](https://coveralls.io/repos/catberry/catberry-oauth2-client/badge.png)](https://coveralls.io/r/catberry/catberry-oauth2-client)
+#OAuth 2.0 Client Plugin for Catberry Framework 2.0 [![Build Status](https://travis-ci.org/catberry/catberry-oauth2-client.png?branch=master)](https://travis-ci.org/catberry/catberry-oauth2-client) [![Coverage Status](https://coveralls.io/repos/catberry/catberry-oauth2-client/badge.png?branch=master)](https://coveralls.io/r/catberry/catberry-oauth2-client?branch=master)
 [![NPM](https://nodei.co/npm/catberry-oauth2-client.png)](https://nodei.co/npm/catberry-oauth2-client/)
 
 ##Description

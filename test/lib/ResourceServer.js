@@ -32,6 +32,7 @@
 
 var environmentHelper = require('../helpers/environmentHelper'),
 	URI = require('catberry-uri').URI,
+	ResourceServerBrowser = require('../../browser/ResourceServer'),
 	testHelper = require('../helpers/testHelper'),
 	configCases = require('../cases/configs/ResourceServer.json'),
 	requestCases = require('../cases/ResourceServer/request.json'),
@@ -174,8 +175,126 @@ describe('ResourceServer', function () {
 			assert.strictEqual(isAuthorized, false);
 		});
 	});
+	describe('#refreshAuthorization', function () {
+		it('should do UHR to refresh endpoint in browser', function (done) {
+			var config =  {
+				host: 'http://some.org',
+				endpoint: {
+					name: 'some',
+					accessTokenName: 'token'
+				}
+			};
+			config.handler = function (parameters) {
+				assert.strictEqual(
+					parameters.url,
+					'http://some-server.org:9090/some/refresh'
+				);
+				done();
+				return {
+					status: {
+						code: 200,
+						headers: {}
+					},
+					content: {}
+				};
+			};
+
+			var locator = environmentHelper.createLocator(config),
+				server = new ResourceServerBrowser(locator, config);
+
+			server.refreshAuthorization({
+				location: new URI('http://some-server.org:9090/home'),
+				cookies: {
+					get: function () {
+						return 'someaccesstoken';
+					}
+				}
+			})
+				.then(null, function (reason) {
+					done(reason);
+				});
+		});
+		it('should pass error from when refreshing authorization in browser',
+			function (done) {
+				var config =  {
+					host: 'http://some.org',
+					endpoint: {
+						name: 'some',
+						accessTokenName: 'token'
+					}
+				};
+				config.handler = function () {
+					throw new Error('some');
+				};
+
+				var locator = environmentHelper.createLocator(config),
+					server = new ResourceServerBrowser(locator, config);
+
+				server.refreshAuthorization({
+					location: new URI('http://some-server.org:9090/home'),
+					cookies: {
+						get: function () {
+							return 'someaccesstoken';
+						}
+					}
+				})
+					.then(function () {
+						done(new Error('Should be an error'));
+					}, function (reason) {
+						assert.strictEqual(reason.message, 'some');
+						done();
+					})
+					.then(null, function (reason) {
+						done(reason);
+					});
+			});
+		it('should pass error from ' +
+			'from authorization server in browser when error code',
+			function (done) {
+				var config =  {
+					host: 'http://some.org',
+					endpoint: {
+						name: 'some',
+						accessTokenName: 'token'
+					}
+				};
+				config.handler = function () {
+					return {
+						status: {
+							code: 500,
+							headers: {}
+						},
+						content: {}
+					};
+				};
+
+				var locator = environmentHelper.createLocator(config),
+					server = new ResourceServerBrowser(locator, config);
+
+				server.refreshAuthorization({
+					location: new URI('http://some-server.org:9090/home'),
+					cookies: {
+						get: function () {
+							return 'someaccesstoken';
+						}
+					}
+				})
+					.then(function () {
+						done(new Error('Should be an error'));
+					}, function (reason) {
+						assert.strictEqual(
+							reason.message,
+							'Can not refresh this access token'
+						);
+						done();
+					})
+					.then(null, function (reason) {
+						done(reason);
+					});
+			});
+	});
 	describe('#removeAuthorization', function () {
-		it('should redirect to remove endpoint', function () {
+		it('should redirect to remove endpoint', function (done) {
 			var config = {
 				authorization: {
 					resourceServers: {
@@ -193,7 +312,6 @@ describe('ResourceServer', function () {
 			var factory = environmentHelper.createFactory(config),
 				server = factory.createResourceServer('server');
 
-			var isRedirected = false;
 			server.removeAuthorization({
 				location: new URI('http://some-server.org:9090/home'),
 				cookies: {
@@ -206,11 +324,125 @@ describe('ResourceServer', function () {
 						where,
 						'/some/remove?token=someaccesstoken&return_uri=/home'
 					);
-					isRedirected = true;
+					done();
 				}
 			});
-
-			assert.strictEqual(isRedirected, true);
 		});
+		it('should do UHR to remove endpoint in browser', function (done) {
+			var config =  {
+					host: 'http://some.org',
+					endpoint: {
+						name: 'some',
+						accessTokenName: 'token'
+					}
+				};
+			config.handler = function (parameters) {
+				assert.strictEqual(
+					parameters.url,
+					'http://some-server.org:9090/some/remove'
+				);
+				done();
+				return {
+					status: {
+						code: 200,
+						headers: {}
+					},
+					content: {}
+				};
+			};
+
+			var locator = environmentHelper.createLocator(config),
+				server = new ResourceServerBrowser(locator, config);
+
+			server.removeAuthorization({
+				location: new URI('http://some-server.org:9090/home'),
+				cookies: {
+					get: function () {
+						return 'someaccesstoken';
+					}
+				}
+			})
+				.then(null, function (reason) {
+					done(reason);
+				});
+		});
+		it('should pass error from when removing authorization in browser',
+			function (done) {
+				var config =  {
+					host: 'http://some.org',
+					endpoint: {
+						name: 'some',
+						accessTokenName: 'token'
+					}
+				};
+				config.handler = function () {
+					throw new Error('some');
+				};
+
+				var locator = environmentHelper.createLocator(config),
+					server = new ResourceServerBrowser(locator, config);
+
+				server.removeAuthorization({
+					location: new URI('http://some-server.org:9090/home'),
+					cookies: {
+						get: function () {
+							return 'someaccesstoken';
+						}
+					}
+				})
+					.then(function () {
+						done(new Error('Should be an error'));
+					}, function (reason) {
+						assert.strictEqual(reason.message, 'some');
+						done();
+					})
+					.then(null, function (reason) {
+						done(reason);
+					});
+			});
+		it('should pass error from ' +
+			'from authorization server in browser when error code',
+			function (done) {
+				var config =  {
+					host: 'http://some.org',
+					endpoint: {
+						name: 'some',
+						accessTokenName: 'token'
+					}
+				};
+				config.handler = function () {
+					return {
+						status: {
+							code: 500,
+							headers: {}
+						},
+						content: {}
+					};
+				};
+
+				var locator = environmentHelper.createLocator(config),
+					server = new ResourceServerBrowser(locator, config);
+
+				server.removeAuthorization({
+					location: new URI('http://some-server.org:9090/home'),
+					cookies: {
+						get: function () {
+							return 'someaccesstoken';
+						}
+					}
+				})
+					.then(function () {
+						done(new Error('Should be an error'));
+					}, function (reason) {
+						assert.strictEqual(
+							reason.message,
+							'Can not invalidate current access token'
+						);
+						done();
+					})
+					.then(null, function (reason) {
+						done(reason);
+					});
+			});
 	});
 });

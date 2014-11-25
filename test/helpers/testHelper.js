@@ -31,55 +31,158 @@
 'use strict';
 
 var assert = require('assert'),
+	URI = require('catberry-uri').URI,
 	Query = require('catberry-uri').Query,
 	environmentHelper = require('./environmentHelper'),
 	http = require('http');
 
 module.exports = {
+	generateResourceServerConfigTest: function (testCase) {
+		it(testCase.name, function () {
+			var factory = environmentHelper.createFactory(testCase.config);
+			if (testCase.error) {
+				assert.throws(function () {
+					factory.createResourceServer(testCase.createName);
+				}, function (error) {
+					return (error.message === testCase.error);
+				});
+				return;
+			}
+
+			var server = factory.createResourceServer(testCase.createName);
+			Object.keys(testCase.expectedConfig)
+				.forEach(function (key) {
+					assert.deepEqual(
+						server._config[key], testCase.expectedConfig[key]
+					);
+				});
+		});
+	},
 	generateConfigTest: function (Constructor, testCase) {
 		it(testCase.name, function () {
-			try {
-				var locator = environmentHelper.createLocator(testCase.config),
-					endpoint = new Constructor(
-						locator, testCase.config.authorization,
-						testCase.config.endpoint
-					);
-
-				if (testCase.expected.sender) {
-					Object.keys(testCase.expected.sender)
-						.forEach(function (key) {
-							assert.deepEqual(
-								endpoint._sender[key],
-								testCase.expected.sender[key]
-							);
-						});
-				}
-				Object.keys(testCase.expected.endpoint)
-					.forEach(function (key) {
-						if (testCase.expected.endpoint[key] &&
-							typeof(testCase.expected.endpoint[key]) === 'object'
-						) {
-							Object.keys(testCase.expected.endpoint[key])
-								.forEach(function (innerKey) {
-									assert.strictEqual(
-										endpoint[key][innerKey],
-										testCase.expected.endpoint[key][innerKey]
-									);
-								});
-						} else {
-							assert.deepEqual(
-								endpoint[key],
-								testCase.expected.endpoint[key]
-							);
-						}
-					});
-			} catch (e) {
-				if (testCase.error) {
-					assert.strictEqual(e.message, testCase.error);
-				} else {
-					throw e;
-				}
+			if (testCase.error) {
+				assert.throws(function () {
+					var locator = environmentHelper.createLocator(
+							testCase.config
+						),
+						endpoint = new Constructor(
+							locator, testCase.config.authorization,
+							testCase.config.endpoint
+						);
+				}, function (error) {
+					return (error.message === testCase.error);
+				});
+				return;
 			}
+			var locator = environmentHelper.createLocator(testCase.config),
+				endpoint = new Constructor(
+					locator, testCase.config.authorization,
+					testCase.config.endpoint
+				);
+
+			if (testCase.expected.sender) {
+				Object.keys(testCase.expected.sender)
+					.forEach(function (key) {
+						assert.deepEqual(
+							endpoint._sender[key],
+							testCase.expected.sender[key]
+						);
+					});
+			}
+			Object.keys(testCase.expected.endpoint)
+				.forEach(function (key) {
+					if (testCase.expected.endpoint[key] &&
+						typeof(testCase.expected.endpoint[key]) === 'object'
+					) {
+						Object.keys(testCase.expected.endpoint[key])
+							.forEach(function (innerKey) {
+								assert.strictEqual(
+									endpoint[key][innerKey],
+									testCase.expected.endpoint[key][innerKey]
+								);
+							});
+					} else {
+						assert.deepEqual(
+							endpoint[key],
+							testCase.expected.endpoint[key]
+						);
+					}
+				});
+		});
+	},
+	generateResourceServerRequestTest: function (testCase) {
+		it (testCase.name, function (done) {
+			var config = Object.create(testCase.config);
+			config.handler = function (parameters) {
+				assert.strictEqual(
+					parameters.url,
+					testCase.config.authorization.resourceServers.server.host +
+						testCase.request.path
+				);
+
+				testCase.request.headers.Authorization = 'Bearer ' +
+					testCase.accessToken;
+
+				assert.deepEqual(
+					parameters.headers,
+					testCase.request.headers
+				);
+				assert.deepEqual(
+					parameters.data,
+					testCase.request.data
+				);
+
+				return {
+					status: {
+						code: testCase.response.code,
+						text: http.STATUS_CODES[testCase.response.code],
+						headers: testCase.response.headers
+					},
+					content: testCase.response.content
+				};
+			};
+
+			var factory = environmentHelper.createFactory(config),
+				resourceServer = factory.createResourceServer('server'),
+				context = {
+					location: new URI(testCase.location),
+					cookies: {
+						get: function (name) {
+							assert.strictEqual(
+								name,
+								testCase.config.authorization
+									.resourceServers.server
+									.endpoint.accessTokenName
+							);
+
+							return testCase.accessToken;
+						}
+					},
+					redirect: function (url) {
+						assert.strictEqual(url, testCase.redirect);
+					}
+				};
+
+			resourceServer.request(context, testCase.request)
+				.then(function (result) {
+					if (testCase.error) {
+						done(new Error('Should be an error'));
+						return;
+					}
+
+					assert.deepEqual(
+						result, testCase.response.content
+					);
+					done();
+				})
+				.then(null, function (error) {
+					if (testCase.error && error.message === testCase.error) {
+						done();
+						return;
+					}
+
+					done(error);
+				});
 		});
 	},
 	generateEndpointTest: function (config, testCase) {

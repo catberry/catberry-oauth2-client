@@ -59,7 +59,8 @@ UHRMock.prototype.post = function (url, options) {
 
 UHRMock.prototype.request = function (parameters) {
 	try {
-		return Promise.resolve(this._handler(parameters));
+		var result = this._handler(parameters);
+		return Promise.resolve(result);
 	} catch(e) {
 		return Promise.reject(e);
 	}

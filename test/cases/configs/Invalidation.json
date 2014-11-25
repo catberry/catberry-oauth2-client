@@ -1,0 +1,95 @@
+{
+	"cases": [
+		{
+			"name": "should set correct parameters from config",
+			"config": {
+				"endpoint": {
+					"cookie": {
+						"accessTokenName": "acat",
+						"refreshTokenName": "reacat",
+						"domain": "some.example.org",
+						"path": "/some"
+					}
+				}
+			},
+
+			"expected": {
+				"sender": null,
+				"endpoint": {
+					"_accessTokenName": "acat",
+					"_refreshTokenName": "reacat",
+					"_cookieDomain": "some.example.org",
+					"_cookiePath": "/some"
+				}
+			},
+			"error": null
+		},
+		{
+			"name": "should set defaults if some parameters are not specified",
+			"config": {
+				"endpoint": {
+					"cookie": {
+						"accessTokenName": "acat",
+						"refreshTokenName": "reacat"
+					}
+				}
+			},
+
+			"expected": {
+				"sender": null,
+				"endpoint": {
+					"_accessTokenName": "acat",
+					"_refreshTokenName": "reacat",
+					"_cookieDomain": "",
+					"_cookiePath": "/"
+				}
+			},
+			"error": null
+		},
+		{
+			"name": "should throw error if accessTokenName is not specified",
+			"config": {
+				"endpoint": {
+					"cookie": {
+						"refreshTokenName": "reacat"
+					}
+				}
+			},
+
+			"expected": null,
+			"error": "At least \"cookie.accessTokenName\" and \"cookie.refreshTokenName\" must be set"
+		},
+		{
+			"name": "should throw error if refreshTokenName is not specified",
+			"config": {
+				"endpoint": {
+					"cookie": {
+						"accessTokenName": "acat"
+					}
+				}
+			},
+
+			"expected": null,
+			"error": "At least \"cookie.accessTokenName\" and \"cookie.refreshTokenName\" must be set"
+		},
+		{
+			"name": "should throw error if cookie configuration is not specified",
+			"config": {
+				"endpoint": {
+				}
+			},
+
+			"expected": null,
+			"error": "At least \"cookie.accessTokenName\" and \"cookie.refreshTokenName\" must be set"
+		},
+		{
+			"name": "should throw error if configuration is not specified",
+			"config": {
+
+			},
+
+			"expected": null,
+			"error": "Config must be an object"
+		}
+	]
+}

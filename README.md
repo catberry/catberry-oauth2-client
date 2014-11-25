@@ -265,6 +265,9 @@ ApiClient.prototype.request = function (context, method, apiPath, query) {
 };
 ```
 
+Please remember that you need to have instance of `ResourceServer` for each
+grant type used in application (like in example earlier).
+
 `ResourceServer` has following methods:
 
 ```javascript

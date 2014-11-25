@@ -1,0 +1,283 @@
+{
+	"cases": [
+		{
+			"name": "should properly do request to resource server",
+			"config": {
+				"authorization": {
+					"resourceServers": {
+						"server": {
+							"unsafeHTTPS": true,
+							"host": "https://example.org",
+							"endpoint": {
+								"name": "auth/guest",
+								"accessTokenName": "ccat"
+							}
+						}
+					}
+				}
+			},
+			"request": {
+				"path": "/somePath",
+				"method": "GET",
+				"headers": {
+					"Some": "Important header",
+					"SomeAnother": "Important header"
+				},
+				"data": {
+					"hello": "world"
+				}
+			},
+			"response": {
+				"code": 200,
+				"headers": {},
+				"content": {
+					"hello2": "world"
+				}
+			},
+			"redirect": null,
+			"accessToken": "someAccessToken"
+		},
+		{
+			"name": "should properly do request to resource server when method is undefined",
+			"config": {
+				"authorization": {
+					"resourceServers": {
+						"server": {
+							"unsafeHTTPS": true,
+							"host": "https://example.org",
+							"endpoint": {
+								"name": "auth/guest",
+								"accessTokenName": "ccat"
+							}
+						}
+					}
+				}
+			},
+			"request": {
+				"path": "/somePath",
+				"headers": {
+					"Some": "Important header",
+					"SomeAnother": "Important header"
+				},
+				"data": {
+					"hello": "world"
+				}
+			},
+			"response": {
+				"code": 200,
+				"headers": {},
+				"content": {
+					"hello2": "world"
+				}
+			},
+			"redirect": null,
+			"accessToken": "someAccessToken"
+		},
+		{
+			"name": "should properly do request to resource server when path is undefined",
+			"config": {
+				"authorization": {
+					"resourceServers": {
+						"server": {
+							"unsafeHTTPS": true,
+							"host": "https://example.org",
+							"endpoint": {
+								"name": "auth/guest",
+								"accessTokenName": "ccat"
+							}
+						}
+					}
+				}
+			},
+			"request": {
+				"method": "GET",
+				"headers": {
+					"Some": "Important header",
+					"SomeAnother": "Important header"
+				},
+				"data": {
+					"hello": "world"
+				}
+			},
+			"response": {
+				"code": 200,
+				"headers": {},
+				"content": {
+					"hello2": "world"
+				}
+			},
+			"redirect": null,
+			"accessToken": "someAccessToken"
+		},
+		{
+			"name": "should properly do request to resource server when empty data",
+			"config": {
+				"authorization": {
+					"resourceServers": {
+						"server": {
+							"unsafeHTTPS": true,
+							"host": "https://example.org",
+							"endpoint": {
+								"name": "auth/guest",
+								"accessTokenName": "ccat"
+							}
+						}
+					}
+				}
+			},
+			"request": {
+				"method": "GET",
+				"path": "/somePath",
+				"headers": {
+					"Some": "Important header",
+					"SomeAnother": "Important header"
+				},
+				"data": {}
+			},
+			"response": {
+				"code": 200,
+				"headers": {},
+				"content": {
+					"hello2": "world"
+				}
+			},
+			"redirect": null,
+			"accessToken": "someAccessToken"
+		},
+		{
+			"name": "should properly do request to resource server when empty headers",
+			"config": {
+				"authorization": {
+					"resourceServers": {
+						"server": {
+							"unsafeHTTPS": true,
+							"host": "https://example.org",
+							"endpoint": {
+								"name": "auth/guest",
+								"accessTokenName": "ccat"
+							}
+						}
+					}
+				}
+			},
+			"request": {
+				"method": "GET",
+				"path": "/somePath",
+				"headers": {},
+				"data": {
+					"hello": "world"
+				}
+			},
+			"response": {
+				"code": 200,
+				"headers": {},
+				"content": {
+					"hello2": "world"
+				}
+			},
+			"redirect": null,
+			"accessToken": "someAccessToken"
+		},
+		{
+			"name": "should redirect to refresh endpoint if Unauthorized",
+			"config": {
+				"authorization": {
+					"resourceServers": {
+						"server": {
+							"unsafeHTTPS": true,
+							"host": "https://example.org",
+							"endpoint": {
+								"name": "auth/guest",
+								"accessTokenName": "ccat"
+							}
+						}
+					}
+				}
+			},
+			"request": {
+				"method": "GET",
+				"path": "/somePath",
+				"headers": {},
+				"data": {
+					"hello": "world"
+				}
+			},
+			"location": "http://some-server.org:9090/",
+			"response": {
+				"code": 401,
+				"headers": {}
+			},
+			"redirect": "/auth/guest/refresh?return_uri=/",
+			"accessToken": "someAccessToken"
+		},
+		{
+			"name": "should redirect to refresh endpoint if token is null",
+			"config": {
+				"authorization": {
+					"resourceServers": {
+						"server": {
+							"unsafeHTTPS": true,
+							"host": "https://example.org",
+							"endpoint": {
+								"name": "auth/guest",
+								"accessTokenName": "ccat"
+							}
+						}
+					}
+				}
+			},
+			"request": {
+				"method": "GET",
+				"path": "/somePath",
+				"headers": {},
+				"data": {
+					"hello": "world"
+				}
+			},
+			"location": "http://some-server.org:9090/",
+			"response": {
+				"code": 401,
+				"headers": {}
+			},
+			"redirect": "/auth/guest/refresh?return_uri=/",
+			"accessToken": null
+		},
+		{
+			"name": "should return error if resource server returns error code",
+			"config": {
+				"authorization": {
+					"resourceServers": {
+						"server": {
+							"unsafeHTTPS": true,
+							"host": "https://example.org",
+							"endpoint": {
+								"name": "auth/guest",
+								"accessTokenName": "ccat"
+							}
+						}
+					}
+				}
+			},
+			"request": {
+				"method": "GET",
+				"path": "/somePath",
+				"headers": {},
+				"data": {
+					"hello": "world"
+				}
+			},
+			"location": "http://some-server.org:9090/",
+			"response": {
+				"code": 500,
+				"headers": {},
+				"content": {
+					"hello2": "world"
+				}
+			},
+			"redirect": null,
+			"error": "Internal Server Error",
+			"accessToken": "someAccessToken"
+		}
+
+	]
+}

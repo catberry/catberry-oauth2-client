@@ -1,0 +1,253 @@
+{
+	"config": {
+		"authorization": {
+			"authServerUrl": "https://example.org",
+			"clientId": "some_client_id",
+			"clientSecret": "some_client_secret",
+			"tokenEndpointPath": "/token",
+			"endpoints": {
+				"auth/guest": {
+					"grantType": "client_credentials",
+					"scope": "wall",
+
+					"cookie": {
+						"accessTokenName": "ccat",
+						"refreshTokenName": "reccat"
+					}
+				}
+			}
+		}
+	},
+	"cases": [
+		{
+			"name": "should set cookie with access token",
+			"request": {
+				"method": "GET",
+				"headers": {
+					"Cookie": "reccat=somerefreshtoken"
+				},
+				"port": 8401,
+				"path": "/auth/guest/refresh"
+			},
+			"response": {
+				"code": 200,
+				"headers": {
+					"set-cookie": ["ccat=someaccesstoken"],
+					"location": null
+				},
+				"content": {
+					"access_token": "someaccesstoken",
+					"token_type": "bearer"
+				}
+			},
+			"authServer": {
+				"request": {
+					"url": "https://example.org/token",
+					"method": "POST",
+					"headers": {
+						"Authorization": "Basic c29tZV9jbGllbnRfaWQ6c29tZV9jbGllbnRfc2VjcmV0",
+						"Content-type": "application/x-www-form-urlencoded"
+					},
+					"data": {
+						"grant_type": "refresh_token",
+						"scope": "wall",
+						"refresh_token": "somerefreshtoken"
+					}
+				},
+				"response": {
+					"code": 200,
+					"headers": {},
+					"content": {
+						"access_token": "someaccesstoken",
+						"token_type": "bearer"
+					}
+				}
+			}
+		},
+		{
+			"name": "should set cookie with access token and redirect",
+			"request": {
+				"method": "GET",
+				"headers": {
+					"Cookie": "reccat=somerefreshtoken"
+				},
+				"port": 8402,
+				"path": "/auth/guest/refresh?return_uri=/some"
+			},
+			"response": {
+				"code": 302,
+				"headers": {
+					"set-cookie": ["ccat=someaccesstoken"],
+					"location": "/some"
+				},
+				"content": null
+			},
+			"authServer": {
+				"request": {
+					"url": "https://example.org/token",
+					"method": "POST",
+					"headers": {
+						"Authorization": "Basic c29tZV9jbGllbnRfaWQ6c29tZV9jbGllbnRfc2VjcmV0",
+						"Content-type": "application/x-www-form-urlencoded"
+					},
+					"data": {
+						"grant_type": "refresh_token",
+						"scope": "wall",
+						"refresh_token": "somerefreshtoken"
+					}
+				},
+				"response": {
+					"code": 200,
+					"headers": {},
+					"content": {
+						"access_token": "someaccesstoken",
+						"token_type": "bearer"
+					}
+				}
+			}
+		},
+		{
+			"name": "should redirect to remove URI with token and return URI if authorization server error",
+			"request": {
+				"method": "GET",
+				"headers": {
+					"Cookie": "ccat=someaccesstoken; reccat=somerefreshtoken"
+				},
+				"port": 8403,
+				"path": "/auth/guest/refresh?return_uri=/some"
+			},
+			"response": {
+				"code": 302,
+				"headers": {
+					"set-cookie": null,
+					"location": "/auth/guest/remove?token=someaccesstoken&return_uri=/some"
+				},
+				"content": null
+			},
+			"authServer": {
+				"request": {
+					"url": "https://example.org/token",
+					"method": "POST",
+					"headers": {
+						"Authorization": "Basic c29tZV9jbGllbnRfaWQ6c29tZV9jbGllbnRfc2VjcmV0",
+						"Content-type": "application/x-www-form-urlencoded"
+					},
+					"data": {
+						"grant_type": "refresh_token",
+						"scope": "wall",
+						"refresh_token": "somerefreshtoken"
+					}
+				},
+				"response": {
+					"code": 500,
+					"headers": {},
+					"content": {
+						"hello": "world"
+					}
+				}
+			}
+		},
+		{
+			"name": "should redirect to remove URI without access token but with return URI if authorization server error",
+			"request": {
+				"method": "GET",
+				"headers": {
+					"Cookie": "reccat=somerefreshtoken"
+				},
+				"port": 8404,
+				"path": "/auth/guest/refresh?return_uri=/some"
+			},
+			"response": {
+				"code": 302,
+				"headers": {
+					"set-cookie": null,
+					"location": "/auth/guest/remove?return_uri=/some"
+				},
+				"content": null
+			},
+			"authServer": {
+				"request": {
+					"url": "https://example.org/token",
+					"method": "POST",
+					"headers": {
+						"Authorization": "Basic c29tZV9jbGllbnRfaWQ6c29tZV9jbGllbnRfc2VjcmV0",
+						"Content-type": "application/x-www-form-urlencoded"
+					},
+					"data": {
+						"grant_type": "refresh_token",
+						"scope": "wall",
+						"refresh_token": "somerefreshtoken"
+					}
+				},
+				"response": {
+					"code": 200,
+					"headers": {},
+					"content": {
+						"access_token": "someaccesstoken"
+					}
+				}
+			}
+		},
+		{
+			"name": "should redirect to remove URI without return URI and access token if authorization server error",
+			"request": {
+				"method": "GET",
+				"headers": {
+					"Cookie": "reccat=somerefreshtoken"
+				},
+				"port": 8405,
+				"path": "/auth/guest/refresh"
+			},
+			"response": {
+				"code": 302,
+				"headers": {
+					"set-cookie": null,
+					"location": "/auth/guest/remove"
+				},
+				"content": null
+			},
+			"authServer": {
+				"request": {
+					"url": "https://example.org/token",
+					"method": "POST",
+					"headers": {
+						"Authorization": "Basic c29tZV9jbGllbnRfaWQ6c29tZV9jbGllbnRfc2VjcmV0",
+						"Content-type": "application/x-www-form-urlencoded"
+					},
+					"data": {
+						"grant_type": "refresh_token",
+						"scope": "wall",
+						"refresh_token": "somerefreshtoken"
+					}
+				},
+				"response": {
+					"code": 200,
+					"headers": {},
+					"content": {
+						"access_token": "someaccesstoken"
+					}
+				}
+			}
+		},
+		{
+			"name": "should redirect to remove URI if refresh token is not specified",
+			"request": {
+				"method": "GET",
+				"port": 8406,
+				"path": "/auth/guest/refresh?return_uri=/some"
+			},
+			"response": {
+				"code": 302,
+				"headers": {
+					"set-cookie": null,
+					"location": "/auth/guest/remove?return_uri=/some"
+				},
+				"content": null
+			},
+			"authServer": {
+				"request": null,
+				"response": null
+			}
+		}
+	]
+}

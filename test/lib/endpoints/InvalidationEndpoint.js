@@ -31,13 +31,22 @@
 'use strict';
 
 var testHelper = require('../../helpers/testHelper'),
-	testCases = require('../../cases/endpoints/InvalidationEndpoint.json');
+	InvalidationEndpoint =
+		require('../../../lib/endpoints/InvalidationEndpoint'),
+	configCases = require('../../cases/configs/Invalidation.json'),
+	endpointCases = require('../../cases/endpoints/InvalidationEndpoint.json');
 
 describe('InvalidationEndpoint', function () {
-
+	describe('#constructor', function () {
+		configCases.cases.forEach(function (testCase) {
+			testHelper.generateConfigTest(
+				InvalidationEndpoint, testCase
+			);
+		});
+	});
 	describe('#handler', function () {
-		testCases.cases.forEach(function (testCase) {
-			testHelper.generateEndpointTest(testCases.config, testCase);
+		endpointCases.cases.forEach(function (testCase) {
+			testHelper.generateEndpointTest(endpointCases.config, testCase);
 		});
 	});
 });

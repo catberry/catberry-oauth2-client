@@ -45,13 +45,15 @@ module.exports = {
 						testCase.config.endpoint
 					);
 
-				Object.keys(testCase.expected.sender)
-					.forEach(function (key) {
-						assert.deepEqual(
-							endpoint._sender[key],
-							testCase.expected.sender[key]
-						);
-					});
+				if (testCase.expected.sender) {
+					Object.keys(testCase.expected.sender)
+						.forEach(function (key) {
+							assert.deepEqual(
+								endpoint._sender[key],
+								testCase.expected.sender[key]
+							);
+						});
+				}
 				Object.keys(testCase.expected.endpoint)
 					.forEach(function (key) {
 						if (testCase.expected.endpoint[key] &&

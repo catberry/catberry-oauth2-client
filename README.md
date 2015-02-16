@@ -15,10 +15,10 @@ Supports grant types:
 
 Supports [Bearer](http://tools.ietf.org/html/rfc6750#section-6.1.1) ([RFC-6750](http://tools.ietf.org/html/rfc6750)) token type.
 
-This plugin sets access and refresh token to specified cookies and uses them
-to do all requests to resource server.
+This plugin sets "access" and "refresh" tokens to specified cookies and uses
+them to do all requests to resource server.
 
-If resource server returns 401 status code it tries to refresh token or
+If resource server returns 401 status code it will try to refresh token or
 unset all token cookies if refreshing is failed.
 
 If you need OAuth 2.0 Authorization Server you can use some library like
@@ -33,12 +33,13 @@ Plugin consists of two parts:
  application.
  * `ResourceServer` type registered in [Service Locator](https://github.com/catberry/catberry/blob/master/docs/index.md#service-locator)
 
-###At Server
+###At the server
 
-In `server.js` you must register library in locator and use factory like this:
+In `server.js` you should register library in locator and use factory like this:
 
 ```javascript
 var OAuth2Client = require('catberry-oauth2-client'),
+	templateEngine = require('catberry-handlebars'),
 	catberry = require('catberry');
 
 var http = require('http'),
@@ -53,6 +54,8 @@ config.publicPath = publicPath;
 config.port = config.port || 3000;
 config.isRelease = typeof(config.isRelease) === 'boolean' ?
 	config.isRelease : false;
+
+templateEngine.register(cat.locator);
 
 var serveStatic = require('serve-static');
 app.use(serveStatic(publicPath));
@@ -75,14 +78,17 @@ http
 	.listen(config.port);
 ```
 
-###In Browser
+###In a browser
 In `browser.js` just do the following:
 
 ```javascript
 var OAuth2Client = require('catberry-oauth2-client'),
+	templateEngine = require('catberry-handlebars'),
 	catberry = require('catberry'),
 	config = require('.configs/browser.json'),
 	cat = catberry.create(config);
+
+templateEngine.register(cat.locator);
 
 OAuth2Client.register(cat.locator);
 cat.startWhenReady();
@@ -315,12 +321,12 @@ ResourceServer.prototype.removeAuthorization = function (context) { }
 
 ##Contribution
 If you have found a bug, please create pull request with [mocha](https://www.npmjs.org/package/mocha) 
-unit-test which reproduces it or describe all details in issue if you can not 
-implement test. If you want to propose some improvements just create issue or 
-pull request but please do not forget to use `npm test` to be sure that your 
+unit-test which reproduces it or describe all details in an issue if you can not
+implement test. If you want to propose some improvements just create an issue or
+a pull request but please do not forget to use `npm test` to be sure that your
 code is awesome.
 
-All changes should satisfy this [Code Style Guide](https://github.com/catberry/catberry/blob/master/docs/code-style-guide.md).
+All changes should satisfy this [Code Style Guide](https://github.com/catberry/catberry/blob/4.0.0/docs/code-style-guide.md).
 
 Also your changes should be covered by unit tests using [mocha](https://www.npmjs.org/package/mocha).
 

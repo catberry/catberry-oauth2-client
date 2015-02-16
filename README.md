@@ -1,7 +1,7 @@
-#OAuth 2.0 Client Plugin for Catberry Framework [![Build Status](https://travis-ci.org/catberry/catberry-oauth2-client.png?branch=master)](https://travis-ci.org/catberry/catberry-oauth2-client) [![Coverage Status](https://coveralls.io/repos/catberry/catberry-oauth2-client/badge.png?branch=master)](https://coveralls.io/r/catberry/catberry-oauth2-client?branch=master)
+# OAuth 2.0 Client Plugin for Catberry Framework [![Build Status](https://travis-ci.org/catberry/catberry-oauth2-client.png?branch=master)](https://travis-ci.org/catberry/catberry-oauth2-client) [![Coverage Status](https://coveralls.io/repos/catberry/catberry-oauth2-client/badge.png?branch=master)](https://coveralls.io/r/catberry/catberry-oauth2-client?branch=master)
 [![NPM](https://nodei.co/npm/catberry-oauth2-client.png)](https://nodei.co/npm/catberry-oauth2-client/)
 
-##Description
+## Description
 This plugin implements "Client" and "Resource Server"
 [roles](http://tools.ietf.org/html/rfc6749#section-1.1) from OAuth 2.0 
 ([RFC-6749](https://tools.ietf.org/html/rfc6749)).
@@ -25,7 +25,7 @@ If you need OAuth 2.0 Authorization Server you can use some library like
 [node-oauth2-server](https://www.npmjs.org/package/node-oauth2-server) or
 framework for building RESTful APIs like [LoopBack](http://docs.strongloop.com/display/LB/OAuth+2.0).
 
-##Usage
+## Usage
 Plugin consists of two parts:
  
  * set of middlewares and endpoints compatible with 
@@ -33,7 +33,7 @@ Plugin consists of two parts:
  application.
  * `ResourceServer` type registered in [Service Locator](https://github.com/catberry/catberry/blob/master/docs/index.md#service-locator)
 
-###At the server
+### At the server
 
 In `server.js` you should register library in locator and use factory like this:
 
@@ -78,7 +78,7 @@ http
 	.listen(config.port);
 ```
 
-###In a browser
+### In a browser
 In `browser.js` just do the following:
 
 ```javascript
@@ -94,7 +94,7 @@ OAuth2Client.register(cat.locator);
 cat.startWhenReady();
 ```
 
-###Configuration
+### Configuration
 For server configuration:
 ```javascript
 {
@@ -238,7 +238,7 @@ For both server and browser configuration:
 **WARNING! DO NOT STORE `clientId` AND `clientSecret` PARAMETERS IN 
 BROWSER CONFIGURATION OBJECT IT BREAKS WHOLE SECURITY MECHANISM**
 
-###Resource Server Usage
+### Resource Server Usage
 For simple access to resource server using OAuth 2.0 authorization there is a
 `ResourceServer` implementation.
 
@@ -319,7 +319,7 @@ ResourceServer.prototype.removeAuthorization = function (context) { }
 
 ```
 
-##Contribution
+## Contribution
 If you have found a bug, please create pull request with [mocha](https://www.npmjs.org/package/mocha) 
 unit-test which reproduces it or describe all details in an issue if you can not
 implement test. If you want to propose some improvements just create an issue or

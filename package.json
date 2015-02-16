@@ -1,6 +1,6 @@
 {
 	"name": "catberry-oauth2-client",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"author": "Denis Rechkunov <denis.rechkunov@gmail.com>",
 	"description": "OAuth 2.0 Client Plugin for Catberry Framework",
 	"homepage": "https://github.com/catberry/catberry-oauth2-client",
@@ -24,18 +24,18 @@
 		"catberry-uri": "^1.2.1"
 	},
 	"devDependencies": {
-		"istanbul-harmony": "~0.3.0",
-		"coveralls": "^2.11.1",
-		"catberry-locator": "^1.0.0",
-		"promise": "^6.0.0",
-		"express": "^4.0.0",
-		"mocha": "^1.0.0",
-		"jscs": "^1.6.0",
-		"jshint": "^2.5.0"
+		"istanbul-harmony": "~0.3.1",
+		"coveralls": "^2.11.2",
+		"catberry-locator": "^1.1.2",
+		"promise": "^6.1.0",
+		"express": "^4.11.2",
+		"mocha": "^2.1.0",
+		"jscs": "~1.6.2",
+		"jshint": "^2.6.0"
 	},
 
 	"engines": {
-		"node": "~0.10.26"
+		"node": ">=0.10"
 	},
 
 	"scripts": {

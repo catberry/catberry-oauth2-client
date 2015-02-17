@@ -20,7 +20,7 @@
 	},
 	"cases": [
 		{
-			"name": "should remove access and refresh tokens from cookies",
+			"name": "should remove access and refresh tokens from cookie",
 			"request": {
 				"method": "GET",
 				"port": 8301,
@@ -142,7 +142,7 @@
 			}
 		},
 		{
-			"name": "should return error if access token exists in cookies but not in query string",
+			"name": "should return error if access token exists in cookie but not in query string",
 			"request": {
 				"method": "GET",
 				"port": 8306,
@@ -168,7 +168,7 @@
 			}
 		},
 		{
-			"name": "should not return error if access token exists in query string but not in cookies",
+			"name": "should not return error if access token exists in query string but not in cookie",
 			"request": {
 				"method": "GET",
 				"port": 8307,
@@ -188,7 +188,7 @@
 			}
 		},
 		{
-			"name": "should redirect after removing cookies",
+			"name": "should redirect after removing cookie",
 			"request": {
 				"method": "GET",
 				"port": 8308,

@@ -69,7 +69,7 @@ describe('ResourceServer', function () {
 				server = factory.createResourceServer('server');
 
 			var token = server.getToken({
-				cookies: {
+				cookie: {
 					get: function (name) {
 						assert.strictEqual(
 							name,
@@ -102,7 +102,7 @@ describe('ResourceServer', function () {
 				server = factory.createResourceServer('server');
 
 			var token = server.getToken({
-				cookies: {
+				cookie: {
 					get: function (name) {
 						assert.strictEqual(
 							name,
@@ -137,7 +137,7 @@ describe('ResourceServer', function () {
 				server = factory.createResourceServer('server');
 
 			var isAuthorized = server.isAuthorized({
-				cookies: {
+				cookie: {
 					get: function () {
 						return 'someaccesstoken';
 					}
@@ -165,7 +165,7 @@ describe('ResourceServer', function () {
 				server = factory.createResourceServer('server');
 
 			var isAuthorized = server.isAuthorized({
-				cookies: {
+				cookie: {
 					get: function () {
 						return null;
 					}
@@ -204,7 +204,7 @@ describe('ResourceServer', function () {
 
 			server.refreshAuthorization({
 				location: new URI('http://some-server.org:9090/home'),
-				cookies: {
+				cookie: {
 					get: function () {
 						return 'someaccesstoken';
 					}
@@ -232,7 +232,7 @@ describe('ResourceServer', function () {
 
 				server.refreshAuthorization({
 					location: new URI('http://some-server.org:9090/home'),
-					cookies: {
+					cookie: {
 						get: function () {
 							return 'someaccesstoken';
 						}
@@ -273,7 +273,7 @@ describe('ResourceServer', function () {
 
 				server.refreshAuthorization({
 					location: new URI('http://some-server.org:9090/home'),
-					cookies: {
+					cookie: {
 						get: function () {
 							return 'someaccesstoken';
 						}
@@ -314,7 +314,7 @@ describe('ResourceServer', function () {
 
 			server.removeAuthorization({
 				location: new URI('http://some-server.org:9090/home'),
-				cookies: {
+				cookie: {
 					get: function () {
 						return 'someaccesstoken';
 					}
@@ -356,7 +356,7 @@ describe('ResourceServer', function () {
 
 			server.removeAuthorization({
 				location: new URI('http://some-server.org:9090/home'),
-				cookies: {
+				cookie: {
 					get: function () {
 						return 'someaccesstoken';
 					}
@@ -384,7 +384,7 @@ describe('ResourceServer', function () {
 
 				server.removeAuthorization({
 					location: new URI('http://some-server.org:9090/home'),
-					cookies: {
+					cookie: {
 						get: function () {
 							return 'someaccesstoken';
 						}
@@ -425,7 +425,7 @@ describe('ResourceServer', function () {
 
 				server.removeAuthorization({
 					location: new URI('http://some-server.org:9090/home'),
-					cookies: {
+					cookie: {
 						get: function () {
 							return 'someaccesstoken';
 						}

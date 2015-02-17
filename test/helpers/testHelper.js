@@ -146,7 +146,7 @@ module.exports = {
 				resourceServer = factory.createResourceServer('server'),
 				context = {
 					location: new URI(testCase.location),
-					cookies: {
+					cookie: {
 						get: function (name) {
 							assert.strictEqual(
 								name,

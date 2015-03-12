@@ -21,7 +21,7 @@
 		"./lib/ResourceServer.js": "./browser/ResourceServer.js"
 	},
 	"dependencies": {
-		"catberry-uri": "^2.0.0"
+		"catberry-uri": "^2.1.0"
 	},
 	"devDependencies": {
 		"istanbul-harmony": "~0.3.1",

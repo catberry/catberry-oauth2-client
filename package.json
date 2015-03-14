@@ -20,6 +20,9 @@
 		"./lib/OAuth2FlowFactory.js": "./browser/OAuth2FlowFactory.js",
 		"./lib/ResourceServer.js": "./browser/ResourceServer.js"
 	},
+	"peerDependencies": {
+		"catberry": "^4.0.0"
+	},
 	"dependencies": {
 		"catberry-uri": "^2.1.0"
 	},

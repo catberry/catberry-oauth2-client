@@ -35,7 +35,7 @@ var OAuth2FlowFactory = require('./lib/OAuth2FlowFactory'),
 
 module.exports = {
 	/**
-	 * Registers all localization components in service locator.
+	 * Registers all OAuth components in service locator.
 	 * @param {ServiceLocator} locator Catberry's service locator.
 	 */
 	register: function (locator) {

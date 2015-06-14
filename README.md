@@ -319,15 +319,13 @@ ResourceServer.prototype.removeAuthorization = function (context) { }
 
 ```
 
-## Contribution
-If you have found a bug, please create pull request with [mocha](https://www.npmjs.org/package/mocha) 
-unit-test which reproduces it or describe all details in an issue if you can not
-implement test. If you want to propose some improvements just create an issue or
-a pull request but please do not forget to use `npm test` to be sure that your
-code is awesome.
+## Contributing
 
-All changes should satisfy this [Code Style Guide](https://github.com/catberry/catberry/blob/4.0.0/docs/code-style-guide.md).
+There are a lot of ways to contribute:
 
-Also your changes should be covered by unit tests using [mocha](https://www.npmjs.org/package/mocha).
+* Give it a star
+* Join the [Gitter](https://gitter.im/catberry/catberry) room and leave a feedback or help with answering users' questions
+* [Submit a bug or a feature request](https://github.com/catberry/catberry-oauth2-client/issues)
+* [Submit a PR](https://github.com/catberry/catberry-oauth2-client/blob/develop/CONTRIBUTING.md)
 
 Denis Rechkunov <denis.rechkunov@gmail.com>

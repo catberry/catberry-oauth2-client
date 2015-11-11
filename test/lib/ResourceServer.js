@@ -177,7 +177,7 @@ describe('ResourceServer', function () {
 	});
 	describe('#refreshAuthorization', function () {
 		it('should do UHR to refresh endpoint in browser', function (done) {
-			var config =  {
+			var config = {
 				host: 'http://some.org',
 				endpoint: {
 					name: 'some',
@@ -216,7 +216,7 @@ describe('ResourceServer', function () {
 		});
 		it('should pass error from when refreshing authorization in browser',
 			function (done) {
-				var config =  {
+				var config = {
 					host: 'http://some.org',
 					endpoint: {
 						name: 'some',
@@ -251,7 +251,7 @@ describe('ResourceServer', function () {
 		it('should pass error from ' +
 			'from authorization server in browser when error code',
 			function (done) {
-				var config =  {
+				var config = {
 					host: 'http://some.org',
 					endpoint: {
 						name: 'some',
@@ -329,7 +329,7 @@ describe('ResourceServer', function () {
 			});
 		});
 		it('should do UHR to remove endpoint in browser', function (done) {
-			var config =  {
+			var config = {
 					host: 'http://some.org',
 					endpoint: {
 						name: 'some',
@@ -368,7 +368,7 @@ describe('ResourceServer', function () {
 		});
 		it('should pass error from when removing authorization in browser',
 			function (done) {
-				var config =  {
+				var config = {
 					host: 'http://some.org',
 					endpoint: {
 						name: 'some',
@@ -403,7 +403,7 @@ describe('ResourceServer', function () {
 		it('should pass error from ' +
 			'from authorization server in browser when error code',
 			function (done) {
-				var config =  {
+				var config = {
 					host: 'http://some.org',
 					endpoint: {
 						name: 'some',

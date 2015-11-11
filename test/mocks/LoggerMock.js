@@ -32,26 +32,14 @@
 
 module.exports = LoggerMock;
 
-function LoggerMock() {
+function LoggerMock() { }
 
-}
+LoggerMock.prototype.trace = function () { };
 
-LoggerMock.prototype.trace = function () {
+LoggerMock.prototype.info = function () { };
 
-};
+LoggerMock.prototype.warn = function () { };
 
-LoggerMock.prototype.info = function () {
+LoggerMock.prototype.error = function () { };
 
-};
-
-LoggerMock.prototype.warn = function () {
-
-};
-
-LoggerMock.prototype.error = function () {
-
-};
-
-LoggerMock.prototype.fatal = function () {
-
-};
+LoggerMock.prototype.fatal = function () { };

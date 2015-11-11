@@ -61,7 +61,7 @@ UHRMock.prototype.request = function (parameters) {
 	try {
 		var result = this._handler(parameters);
 		return Promise.resolve(result);
-	} catch(e) {
+	} catch (e) {
 		return Promise.reject(e);
 	}
 };

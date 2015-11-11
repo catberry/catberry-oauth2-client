@@ -67,8 +67,8 @@ OAuth2FlowFactory.prototype._config = null;
 
 /**
  * Creates resource server with specified configuration name.
- * @param {String} name Configuration name.
- * @returns {ResourceServer}
+ * @param {string} name Configuration name.
+ * @returns {ResourceServer} Resource server instance.
  */
 OAuth2FlowFactory.prototype.createResourceServer = function (name) {
 	var resourceServers = this._config.resourceServers || {};

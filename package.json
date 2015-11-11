@@ -1,6 +1,6 @@
 {
 	"name": "catberry-oauth2-client",
-	"version": "2.0.8",
+	"version": "2.0.9",
 	"author": "Denis Rechkunov <denis.rechkunov@gmail.com>",
 	"description": "OAuth 2.0 Client Plugin for Catberry Framework",
 	"homepage": "https://github.com/catberry/catberry-oauth2-client",
@@ -21,20 +21,20 @@
 		"./lib/ResourceServer.js": "./browser/ResourceServer.js"
 	},
 	"peerDependencies": {
-		"catberry": "^4.0.0 || ^5.0.0 || ^6.0.0"
+		"catberry": "^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0"
 	},
 	"dependencies": {
-		"catberry-uri": "^2.1.0"
+		"catberry-uri": "^2.1.5"
 	},
 	"devDependencies": {
-		"istanbul-harmony": "~0.3.12",
-		"codecov.io": "^0.1.2",
-		"catberry-locator": "^1.1.4",
-		"promise": "^7.0.1",
-		"express": "^4.11.2",
-		"mocha": "^2.2.4",
-		"jscs": "~1.6.2",
-		"jshint": "^2.6.0"
+		"istanbul": "~0.4.0",
+		"codecov.io": "~0.1.6",
+		"catberry-locator": "^1.1.8",
+		"promise": "^7.0.4",
+		"express": "^4.13.3",
+		"mocha": "^2.3.3",
+		"jscs": "^2.5.1",
+		"jshint": "^2.8.0"
 	},
 
 	"engines": {
@@ -45,10 +45,5 @@
 		"test": "make"
 	},
 
-	"licenses": [
-		{
-			"type": "MIT",
-			"url": "https://github.com/catberry/catberry-oauth2-client/blob/master/LICENSE"
-		}
-	]
+	"license": "MIT"
 }

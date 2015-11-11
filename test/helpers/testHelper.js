@@ -92,7 +92,7 @@ module.exports = {
 			Object.keys(testCase.expected.endpoint)
 				.forEach(function (key) {
 					if (testCase.expected.endpoint[key] &&
-						typeof(testCase.expected.endpoint[key]) === 'object'
+						typeof (testCase.expected.endpoint[key]) === 'object'
 					) {
 						Object.keys(testCase.expected.endpoint[key])
 							.forEach(function (innerKey) {
@@ -111,7 +111,7 @@ module.exports = {
 		});
 	},
 	generateResourceServerRequestTest: function (testCase) {
-		it (testCase.name, function (done) {
+		it(testCase.name, function (done) {
 			var config = Object.create(testCase.config);
 			config.handler = function (parameters) {
 				assert.strictEqual(

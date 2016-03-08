@@ -1,127 +1,75 @@
-/*
- * catberry-oauth
- *
- * Copyright (c) 2014 Denis Rechkunov and project contributors.
- *
- * catberry-oauth's license follows:
- *
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge,
- * publish, distribute, sublicense, and/or sell copies of the Software,
- * and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * This license applies to all parts of catberry-oauth that are not externally
- * maintained libraries.
- */
-
 'use strict';
 
-var assert = require('assert'),
-	URI = require('catberry-uri').URI,
-	Query = require('catberry-uri').Query,
-	environmentHelper = require('./environmentHelper'),
-	http = require('http');
+const assert = require('assert');
+const URI = require('catberry-uri').URI;
+const Query = require('catberry-uri').Query;
+const environmentHelper = require('./environmentHelper');
+const http = require('http');
 
 module.exports = {
-	generateResourceServerConfigTest: function (testCase) {
-		it(testCase.name, function () {
-			var factory = environmentHelper.createFactory(testCase.config);
+	generateResourceServerConfigTest(testCase) {
+		it(testCase.name, () => {
+			const factory = environmentHelper.createFactory(testCase.config);
 			if (testCase.error) {
-				assert.throws(function () {
-					factory.createResourceServer(testCase.createName);
-				}, function (error) {
-					return (error.message === testCase.error);
-				});
+				assert.throws(
+					() => factory.createResourceServer(testCase.createName),
+					error => error.message === testCase.error
+				);
 				return;
 			}
 
-			var server = factory.createResourceServer(testCase.createName);
+			const server = factory.createResourceServer(testCase.createName);
+
+			/* eslint no-underscore-dangle: 0 */
 			Object.keys(testCase.expectedConfig)
-				.forEach(function (key) {
-					assert.deepEqual(
-						server._config[key], testCase.expectedConfig[key]
-					);
-				});
+				.forEach(key => assert.deepEqual(server._config[key], testCase.expectedConfig[key]));
 		});
 	},
-	generateConfigTest: function (Constructor, testCase) {
-		it(testCase.name, function () {
+
+	generateConfigTest(Constructor, testCase) {
+		it(testCase.name, () => {
 			if (testCase.error) {
-				assert.throws(function () {
-					var locator = environmentHelper.createLocator(
-							testCase.config
-						),
-						endpoint = new Constructor(
-							locator, testCase.config.authorization,
-							testCase.config.endpoint
-						);
-				}, function (error) {
-					return (error.message === testCase.error);
-				});
+				assert.throws(
+					() => {
+						const locator = environmentHelper.createLocator(testCase.config);
+						const endpoint = new Constructor(locator, testCase.config.authorization, testCase.config.endpoint);
+					},
+					error => error.message === testCase.error);
 				return;
 			}
-			var locator = environmentHelper.createLocator(testCase.config),
-				endpoint = new Constructor(
-					locator, testCase.config.authorization,
-					testCase.config.endpoint
-				);
+
+			const locator = environmentHelper.createLocator(testCase.config);
+			const endpoint = new Constructor(locator, testCase.config.authorization, testCase.config.endpoint);
 
 			if (testCase.expected.sender) {
 				Object.keys(testCase.expected.sender)
-					.forEach(function (key) {
-						assert.deepEqual(
-							endpoint._sender[key],
-							testCase.expected.sender[key]
-						);
-					});
+					.forEach(key => assert.deepEqual(endpoint._sender[key], testCase.expected.sender[key]));
 			}
+
+			/* eslint max-nested-callbacks: 0 */
 			Object.keys(testCase.expected.endpoint)
-				.forEach(function (key) {
-					if (testCase.expected.endpoint[key] &&
-						typeof (testCase.expected.endpoint[key]) === 'object'
-					) {
+				.forEach(key => {
+					if (testCase.expected.endpoint[key] && typeof (testCase.expected.endpoint[key]) === 'object') {
 						Object.keys(testCase.expected.endpoint[key])
-							.forEach(function (innerKey) {
-								assert.strictEqual(
-									endpoint[key][innerKey],
-									testCase.expected.endpoint[key][innerKey]
-								);
-							});
+							.forEach(innerKey => assert.strictEqual(endpoint[key][innerKey], testCase.expected.endpoint[key][innerKey]));
 					} else {
-						assert.deepEqual(
-							endpoint[key],
-							testCase.expected.endpoint[key]
-						);
+						assert.deepEqual(endpoint[key], testCase.expected.endpoint[key]);
 					}
 				});
 		});
 	},
-	generateResourceServerRequestTest: function (testCase) {
-		it(testCase.name, function (done) {
-			var config = Object.create(testCase.config);
-			config.handler = function (parameters) {
+
+	generateResourceServerRequestTest(testCase) {
+		it(testCase.name, done => {
+			const config = Object.create(testCase.config);
+			config.handler = parameters => {
 				assert.strictEqual(
 					parameters.url,
 					testCase.config.authorization.resourceServers.server.host +
-						testCase.request.path
+					testCase.request.path
 				);
 
-				testCase.request.headers.Authorization = 'Bearer ' +
-					testCase.accessToken;
+				testCase.request.headers.Authorization = `Bearer ${testCase.accessToken}`;
 
 				assert.deepEqual(
 					parameters.headers,
@@ -142,30 +90,30 @@ module.exports = {
 				};
 			};
 
-			var factory = environmentHelper.createFactory(config),
-				resourceServer = factory.createResourceServer('server'),
-				context = {
-					location: new URI(testCase.location),
-					cookie: {
-						get: function (name) {
-							assert.strictEqual(
-								name,
-								testCase.config.authorization
-									.resourceServers.server
-									.endpoint.accessTokenName
-							);
+			const factory = environmentHelper.createFactory(config);
+			const resourceServer = factory.createResourceServer('server');
+			const context = {
+				location: new URI(testCase.location),
+				cookie: {
+					get(name) {
+						assert.strictEqual(
+							name,
+							testCase.config.authorization
+								.resourceServers.server
+								.endpoint.accessTokenName
+						);
 
-							return testCase.accessToken;
-						}
-					},
-					redirect: function (url) {
-						assert.strictEqual(url, testCase.redirect);
-						return Promise.resolve();
+						return testCase.accessToken;
 					}
-				};
+				},
+				redirect(url) {
+					assert.strictEqual(url, testCase.redirect);
+					return Promise.resolve();
+				}
+			};
 
 			resourceServer.request(context, testCase.request)
-				.then(function (result) {
+				.then(result => {
 					if (testCase.error) {
 						done(new Error('Should be an error'));
 						return;
@@ -176,7 +124,7 @@ module.exports = {
 					);
 					done();
 				})
-				.then(null, function (error) {
+				.catch(error => {
 					if (testCase.error && error.message === testCase.error) {
 						done();
 						return;
@@ -186,32 +134,24 @@ module.exports = {
 				});
 		});
 	},
-	generateEndpointTest: function (config, testCase) {
-		it(testCase.name, function (done) {
-			var isError = false,
-				localConfig = Object.create(config);
-			localConfig.handler = function (parameters) {
+
+	generateEndpointTest(config, testCase) {
+		it(testCase.name, done => {
+			const localConfig = Object.create(config);
+			let isError = false;
+
+			localConfig.handler = parameters => {
 				// validate request that Client does to Authorization Server
 				try {
-					assert.strictEqual(
-						parameters.method, testCase.authServer.request.method
-					);
-					assert.strictEqual(
-						parameters.url, testCase.authServer.request.url
-					);
+					assert.strictEqual(parameters.method, testCase.authServer.request.method);
+					assert.strictEqual(parameters.url, testCase.authServer.request.url);
 					if (testCase.authServer.request.data) {
-						assert.deepEqual(
-							parameters.data, testCase.authServer.request.data
-						);
+						assert.deepEqual(parameters.data, testCase.authServer.request.data);
 					} else {
-						assert.strictEqual(
-							parameters.data, ''
-						);
+						assert.strictEqual(parameters.data, '');
 					}
 
-					validateHeaders(
-						parameters.headers, testCase.authServer.request.headers
-					);
+					validateHeaders(parameters.headers, testCase.authServer.request.headers);
 				} catch (e) {
 					isError = true;
 					done(e);
@@ -228,21 +168,21 @@ module.exports = {
 			};
 
 			// create HTTP server for hosting OAuth 2.0 Client Endpoint
-			var app = environmentHelper.createApp(localConfig);
-			app.listen(testCase.request.port, function () {
+			const app = environmentHelper.createApp(localConfig);
+			app.listen(testCase.request.port, () => {
 				// do request from Resource Owner to Client
 				// described in test case and validate response
-				var request = http.request(testCase.request,
-					function (response) {
+				const request = http.request(testCase.request,
+					response => {
 						validateResponse(response, testCase.response,
-							function (error) {
+							error => {
 								if (!isError) {
 									done(error);
 								}
 							});
 					});
 
-				var entity = new Query();
+				const entity = new Query();
 				entity.values = testCase.request.data;
 				request.end(entity.toString());
 			});
@@ -250,19 +190,26 @@ module.exports = {
 	}
 };
 
+/**
+ * Validate Response
+ *
+ * @param actual
+ * @param expected
+ * @param callback
+ */
 function validateResponse(actual, expected, callback) {
-	var content = '';
+	let content = '';
 	actual
-		.on('data', function (chunk) {
+		.on('data', chunk => {
 			content += chunk;
 		})
-		.on('end', function () {
+		.on('end', () => {
 			try {
 				assert.strictEqual(actual.statusCode, expected.code);
 				validateHeaders(actual.headers, expected.headers);
 				if (expected.content) {
 					assert.notEqual(content, '');
-					var object = JSON.parse(content);
+					const object = JSON.parse(content);
 					assert.deepEqual(object, expected.content);
 				} else {
 					assert.strictEqual(content, '');
@@ -275,21 +222,27 @@ function validateResponse(actual, expected, callback) {
 		});
 }
 
+/**
+ * Validate headers
+ *
+ * @param actual
+ * @param expected
+ */
 function validateHeaders(actual, expected) {
-	var normalizedActual = {},
-		normalizedExpected = {},
-		actualKeys = Object.keys(actual),
-		expectedKeys = Object.keys(expected);
+	const normalizedActual = {};
+	const normalizedExpected = {};
+	const actualKeys = Object.keys(actual);
+	const expectedKeys = Object.keys(expected);
 
-	actualKeys.forEach(function (key) {
+	actualKeys.forEach(key => {
 		normalizedActual[key.toLocaleLowerCase()] = actual[key];
 	});
-	expectedKeys.forEach(function (key) {
+	expectedKeys.forEach(key => {
 		normalizedExpected[key.toLocaleLowerCase()] = expected[key];
 	});
 
 	Object.keys(normalizedExpected)
-		.forEach(function (headerName) {
+		.forEach(headerName => {
 			if (typeof (normalizedExpected[headerName]) === 'string') {
 				assert.notEqual(
 					normalizedActual[headerName].indexOf(
@@ -301,22 +254,15 @@ function validateHeaders(actual, expected) {
 			}
 
 			if (normalizedExpected[headerName] instanceof Array) {
-				assert.strictEqual(
-					normalizedActual[headerName] instanceof Array, true
-				);
-				assert.strictEqual(
-					normalizedActual[headerName].length,
-					normalizedExpected[headerName].length
-				);
-				normalizedExpected[headerName].forEach(function (item, index) {
+				assert.strictEqual(normalizedActual[headerName] instanceof Array, true);
+				assert.strictEqual(normalizedActual[headerName].length, normalizedExpected[headerName].length);
+
+				normalizedExpected[headerName].forEach((item, index) => {
 					if (typeof (item) === 'string') {
-						assert.notEqual(
-							normalizedActual[headerName][index].indexOf(item),
-							-1
-						);
+						assert.notEqual(normalizedActual[headerName][index].indexOf(item), -1);
 						return;
 					}
-					throw new Error('Wrong type: ' + typeof (item));
+					throw new Error(`Wrong type: ${typeof (item)}`);
 				});
 				return;
 			}
@@ -326,7 +272,7 @@ function validateHeaders(actual, expected) {
 				return;
 			}
 			throw new Error(
-				'Wrong type: ' + typeof (normalizedExpected[headerName])
+				`Wrong type: ${typeof (normalizedExpected[headerName])}`
 			);
 		});
 }

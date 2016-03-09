@@ -1,53 +1,16 @@
-/*
- * catberry-oauth
- *
- * Copyright (c) 2014 Denis Rechkunov and project contributors.
- *
- * catberry-oauth's license follows:
- *
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge,
- * publish, distribute, sublicense, and/or sell copies of the Software,
- * and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * This license applies to all parts of catberry-oauth that are not externally
- * maintained libraries.
- */
-
 'use strict';
 
-var testHelper = require('../../helpers/testHelper'),
-	AuthorizationCodeFlowEndpoint =
-		require('../../../lib/endpoints/AuthorizationCodeFlowEndpoint'),
-	configCases = require('../../cases/configs/AuthorizationCodeFlow.json'),
-	endpointCases =
-		require('../../cases/endpoints/AuthorizationCodeFlowEndpoint.json');
+const testHelper = require('../../helpers/testHelper');
+const AuthorizationCodeFlowEndpoint = require('../../../lib/endpoints/AuthorizationCodeFlowEndpoint');
+const configCases = require('../../cases/configs/AuthorizationCodeFlow.json');
+const endpointCases = require('../../cases/endpoints/AuthorizationCodeFlowEndpoint.json');
 
-describe('AuthorizationCodeFlowEndpoint', function () {
-	describe('#constructor', function () {
-		configCases.cases.forEach(function (testCase) {
-			testHelper.generateConfigTest(
-				AuthorizationCodeFlowEndpoint, testCase
-			);
-		});
+/* eslint max-nested-callbacks: 0 */
+describe('AuthorizationCodeFlowEndpoint', () => {
+	describe('#constructor', () => {
+		configCases.cases.forEach(testCase => testHelper.generateConfigTest(AuthorizationCodeFlowEndpoint, testCase));
 	});
-	describe('#handler', function () {
-		endpointCases.cases.forEach(function (testCase) {
-			testHelper.generateEndpointTest(endpointCases.config, testCase);
-		});
+	describe('#handler', () => {
+		endpointCases.cases.forEach(testCase => testHelper.generateEndpointTest(endpointCases.config, testCase));
 	});
 });

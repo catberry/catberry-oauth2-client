@@ -13,8 +13,6 @@ const uriHelper = require('../lib/helpers/uriHelper');
  * @param {Object} config.endpoint Configuration of endpoint used for authorization.
  * @param {string} config.endpoint.name Name of endpoint.
  * @param {string} config.endpoint.accessTokenName Name of access token cookie.
- *
- * @extends base/ResourceServer
  */
 class ResourceServer extends ResourceServerBase {
 

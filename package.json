@@ -31,11 +31,11 @@
 		"./lib/ResourceServer.js": "./browser/ResourceServer.js"
 	},
 	"dependencies": {
-		"catberry-uri": "^2.1.6"
+		"catberry-uri": "^3.0.0"
 	},
 	"devDependencies": {
-		"istanbul": "~0.4.0",
-		"codecov.io": "~0.1.6",
+		"istanbul": "~0.4.2",
+		"codecov": "^1.0.1",
 		"catberry-locator": "^2.1.0",
 		"promise": "^7.1.1",
 		"express": "^4.13.3",

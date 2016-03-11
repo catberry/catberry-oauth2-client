@@ -1,6 +1,8 @@
 # OAuth 2.0 Client Plugin for Catberry Framework
 
-[![Build Status](https://travis-ci.org/catberry/catberry-oauth2-client.svg?branch=master)](https://travis-ci.org/catberry/catberry-oauth2-client) [![codecov.io](http://codecov.io/github/catberry/catberry-oauth2-client/coverage.svg?branch=master)](http://codecov.io/github/catberry/catberry-oauth2-client?branch=master)
+[![Build Status](https://travis-ci.org/catberry/catberry-oauth2-client.svg?branch=master)](https://travis-ci.org/catberry/catberry-oauth2-client)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/catberry/main?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge)
+[![codecov.io](http://codecov.io/github/catberry/catberry-oauth2-client/coverage.svg?branch=master)](http://codecov.io/github/catberry/catberry-oauth2-client?branch=master)
 
 ## Description
 This plugin implements "Client" and "Resource Server"

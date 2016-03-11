@@ -1,8 +1,8 @@
 'use strict';
 
 const UHRMock = require('../mocks/UHRMock');
-const LoggerMock = require('../mocks/LoggerMock');
 const express = require('express');
+const events = require('events');
 const OAuth2FlowFactory = require('../../lib/OAuth2FlowFactory');
 const ServiceLocator = require('catberry-locator');
 
@@ -12,7 +12,9 @@ module.exports = {
 
 		locator.registerInstance('serviceLocator', locator);
 		locator.registerInstance('config', config);
-		locator.registerInstance('logger', new LoggerMock());
+		const eventBus = new events.EventEmitter();
+		eventBus.on('error', () => {});
+		locator.registerInstance('eventBus', eventBus);
 		locator.register('oauth2FlowFactory', OAuth2FlowFactory, true);
 		locator.register('uhr', UHRMock, true);
 

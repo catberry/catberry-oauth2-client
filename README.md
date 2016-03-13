@@ -4,6 +4,14 @@
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/catberry/main?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge)
 [![codecov.io](http://codecov.io/github/catberry/catberry-oauth2-client/coverage.svg?branch=master)](http://codecov.io/github/catberry/catberry-oauth2-client?branch=master)
 
+## Installation
+
+```bash
+npm install catberry-oauth2-client
+```
+
+This plugin requires [UHR](https://github.com/catberry/catberry-uhr) registered to the locator.
+
 ## Description
 This plugin implements "Client" and "Resource Server"
 [roles](http://tools.ietf.org/html/rfc6749#section-1.1) from OAuth 2.0
@@ -41,62 +49,90 @@ Plugin consists of two parts:
 In `server.js` you should register the plugin into the locator and use the factory like this:
 
 ```javascript
-const OAuth2Client = require('catberry-oauth2-client');
-const templateEngine = require('catberry-handlebars');
-const logger = require('catberry-logger');
-const catberry = require('catberry');
+'use strict';
 
 const http = require('http');
 const path = require('path');
-const publicPath = path.join(__dirname, 'public');
-const connect = require('connect');
-const config = require('./configs/server.json');
-const cat = catberry.create(config);
-const app = connect();
 
-config.publicPath = publicPath;
-config.port = config.port || 3000;
-config.isRelease = typeof(config.isRelease) === 'boolean' ?
-	config.isRelease : false;
+// configuration
+const config = require('./config/environment.json');
+const isRelease = process.argv.length === 3 ?	process.argv[2] === 'release' : undefined;
+config.publicPath = path.join(__dirname, 'public');
+config.server.port = config.server.port || 3000;
+config.isRelease = isRelease === undefined ? config.isRelease : isRelease;
 
+// catberry application
+const catberry = require('catberry');
+const cat = catberry.create(config); // the Catberry application object
+cat.events.on('ready', () => {
+	const logger = cat.locator.resolve('logger');
+	logger.info(`Ready to handle incoming requests on port ${config.server.port}`);
+});
+
+// register Catberry plugins needed on the server
+const templateEngine = require('catberry-handlebars');
 templateEngine.register(cat.locator);
-logger.register(cat.locator);
 
-const serveStatic = require('serve-static');
-app.use(serveStatic(publicPath));
+const loggerPlugin = require('catberry-logger');
+loggerPlugin.register(cat.locator);
 
+const uhrPlugin = require('catberry-uhr');
+uhrPlugin.register(cat.locator);
+
+const OAuth2Client = require('catberry-oauth2-client');
 // register all types of OAuth 2.0 client plugin
 OAuth2Client.register(cat.locator);
+
+// web server
+const express = require('express');
+const app = express();
+
+const serveStatic = require('serve-static');
+app.use(serveStatic(config.publicPath));
+
 // create factory instance with current configuration
 const OAuth2FlowFactory = cat.locator.resolve('oauth2FlowFactory');
 // add all endpoints required for OAuth 2.0 authorization to connect application
 OAuth2FlowFactory.addEndpoints(app);
 
-// and only then add catberry middleware
-app.use(cat.getMiddleware());
+app.use(cat.getMiddleware()); // Catberry app as a middleware
 
 const errorhandler = require('errorhandler');
 app.use(errorhandler());
 
 http
 	.createServer(app)
-	.listen(config.port);
+	.listen(config.server.port);
 ```
 
 ### In a browser
 In `browser.js` just do the following:
 
 ```javascript
-const OAuth2Client = require('catberry-oauth2-client');
-const templateEngine = require('catberry-handlebars');
-const logger = require('catberry-logger');
+'use strict';
+
+// this config will be replaced by `./config/browser.json` when building
+// because of `browser` field in `package.json`
+const config = require('./config/environment.json');
+
+// catberry application
 const catberry = require('catberry');
-const config = require('.configs/browser.json');
 const cat = catberry.create(config);
 
+// register Catberry plugins needed in a browser
+const templateEngine = require('catberry-handlebars');
 templateEngine.register(cat.locator);
 
+const loggerPlugin = require('catberry-logger');
+loggerPlugin.register(cat.locator);
+
+const uhrPlugin = require('catberry-uhr');
+uhrPlugin.register(cat.locator);
+
+const OAuth2Client = require('catberry-oauth2-client');
 OAuth2Client.register(cat.locator);
+
+// starts the application when DOM is ready
 cat.startWhenReady();
 ```
 

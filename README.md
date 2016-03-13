@@ -282,6 +282,25 @@ class ApiClient {
 }
 ```
 
+As a response you would have:
+
+```json
+{
+  "status": {
+    "code": 200,
+    "text": "OK",
+    "headers": {
+      "Content-Type": "text/html; charset=utf-8",
+      "Date": "Sun, 13 Mar 2016 09:55:13 GMT"
+    }
+  },
+  "content": {
+    "hello": "world"
+  }
+}
+```
+
+
 Please remember that you need to have an instance of `ResourceServer` for each
 grant type used in your application (like in the example earlier).
 

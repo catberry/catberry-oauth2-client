@@ -205,7 +205,8 @@
 			"location": "http://some-server.org:9090/",
 			"response": {
 				"code": 401,
-				"headers": {}
+				"headers": {},
+				"content": {}
 			},
 			"redirect": "/auth/guest/refresh?return_uri=/",
 			"accessToken": "someAccessToken"
@@ -234,6 +235,7 @@
 					"hello": "world"
 				}
 			},
+			"error": "Access token is not found, refreshing...",
 			"location": "http://some-server.org:9090/",
 			"response": {
 				"code": 401,

@@ -115,23 +115,23 @@ module.exports = {
 			resourceServer.request(context, testCase.request)
 				.then(result => {
 					if (testCase.error) {
-						done(new Error('Should be an error'));
-						return;
+						throw new Error('Should be an error');
 					}
 
 					assert.deepEqual(
-						result, testCase.response.content
+						result, {
+							status: {
+								code: testCase.response.code,
+								text: http.STATUS_CODES[testCase.response.code],
+								headers: testCase.response.headers
+							},
+							content: testCase.response.content
+						}
 					);
-					done();
 				})
-				.catch(error => {
-					if (testCase.error && error.message === testCase.error) {
-						done();
-						return;
-					}
-
-					done(error);
-				});
+				.catch(error => assert.strictEqual(error.message, testCase.error))
+				.then(done)
+				.catch(done);
 		});
 	},
 

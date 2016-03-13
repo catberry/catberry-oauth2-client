@@ -7,7 +7,7 @@
 ## Installation
 
 ```bash
-npm install catberry-oauth2-client
+npm install catberry-oauth2-client --save
 ```
 
 This plugin requires [UHR](https://github.com/catberry/catberry-uhr) registered to the locator.

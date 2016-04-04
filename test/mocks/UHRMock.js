@@ -1,10 +1,5 @@
 'use strict';
 
-// if V8 still does not have promises then add it.
-if (!('Promise' in global)) {
-	global.Promise = require('promise');
-}
-
 class UHRMock {
 	constructor(locator) {
 		const config = locator.resolve('config');

@@ -31,19 +31,19 @@
 		"./lib/ResourceServer.js": "./browser/ResourceServer.js"
 	},
 	"dependencies": {
-		"catberry-uri": "^3.1.0"
+		"catberry-uri": "^3.2.2"
 	},
 	"peerDependencies": {
-		"catberry": "^8.0.0",
+		"catberry": "^8.0.0 || ^9.0.0",
 		"catberry-uhr": "^5.0.0"
 	},
 	"devDependencies": {
-		"istanbul": "~0.4.2",
-		"codecov": "^1.0.1",
-		"catberry-locator": "^2.1.0",
-		"express": "^4.13.3",
-		"mocha": "^2.4.5",
-		"eslint": "^2.2.0"
+		"istanbul": "~0.4.5",
+		"codecov": "^2.1.0",
+		"catberry-locator": "^2.2.1",
+		"express": "^4.15.2",
+		"mocha": "^3.2.0",
+		"eslint": "^3.18.0"
 	},
 
 	"engines": {

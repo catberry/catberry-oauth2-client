@@ -5,7 +5,12 @@
 	"description": "OAuth 2.0 Client Plugin for Catberry Framework",
 	"homepage": "https://github.com/catberry/catberry-oauth2-client",
 	"keywords": [
-		"catberry", "authorization", "security", "oauth", "authentication", "rfc6749"
+		"catberry",
+		"authorization",
+		"security",
+		"oauth",
+		"authentication",
+		"rfc6749"
 	],
 	"bugs": {
 		"url": "https://github.com/catberry/catberry-oauth2-client/issues",
@@ -45,14 +50,11 @@
 		"mocha": "^3.2.0",
 		"eslint": "^3.18.0"
 	},
-
 	"engines": {
 		"node": ">=4"
 	},
-
 	"scripts": {
 		"test": "make"
 	},
-
 	"license": "MIT"
 }

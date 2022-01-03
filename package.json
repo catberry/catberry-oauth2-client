@@ -1,7 +1,7 @@
 {
 	"name": "catberry-oauth2-client",
 	"version": "3.0.2",
-	"author": "Denis Rechkunov <denis.rechkunov@gmail.com>",
+	"author": "Denis Rechkunov <denis@rdner.de>",
 	"description": "OAuth 2.0 Client Plugin for Catberry Framework",
 	"homepage": "https://github.com/catberry/catberry-oauth2-client",
 	"keywords": [
@@ -9,7 +9,7 @@
 	],
 	"bugs": {
 		"url": "https://github.com/catberry/catberry-oauth2-client/issues",
-		"email": "denis.rechkunov@gmail.com"
+		"email": "denis@rdner.de"
 	},
 	"repository": {
 		"type": "git",
@@ -18,7 +18,7 @@
 	"contributors": [
 		{
 			"name": "Denis Rechkunov",
-			"email": "denis.rechkunov@gmail.com"
+			"email": "denis@rdner.de"
 		},
 		{
 			"name": "Maxim Chetverikov",
